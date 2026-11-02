@@ -41,13 +41,9 @@ The interface is available in Kazakh, Russian and English.
 frontend/   web client
 backend/    API, agents, orchestration
 ml/         student model training
-docs/       specification and project documents
+docs/       diagrams and presentations
 ```
 
 ## Getting started
 
 Setup instructions will be added in Milestone 2.
-
-## Documentation
-
-- [Specification](docs/SPEC.md)
