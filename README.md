@@ -51,4 +51,3 @@ Setup instructions will be added in Milestone 2.
 ## Documentation
 
 - [Specification](docs/SPEC.md)
-- [Course requirements](docs/requirements/course.md)
