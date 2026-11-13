@@ -8,6 +8,10 @@ select = ["E", "F", "I", "UP"]
 # The local alembic/ folder makes ruff treat the alembic package as our own code.
 known-third-party = ["alembic"]
 
+[tool.ruff.lint.per-file-ignores]
+# Test settings must be in the environment before app modules are imported.
+"tests/conftest.py" = ["E402"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
