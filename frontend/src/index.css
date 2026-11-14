@@ -1,0 +1,75 @@
+@import 'tailwindcss';
+
+/* Design tokens, described in docs/design.md. Components use only these names. */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-muted: #eef1f5;
+  --border: #dde2e9;
+  --text: #18212f;
+  --muted: #5b6676;
+  --primary: #2f6fde;
+  --primary-hover: #2459bd;
+  --primary-fg: #ffffff;
+  --primary-soft: #e6eefc;
+  --success: #17804a;
+  --success-soft: #e4f5eb;
+  --danger: #c2352b;
+  --danger-soft: #fdeceb;
+  --warning: #8a5a00;
+  --warning-soft: #fff4dc;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f141b;
+    --surface: #171e27;
+    --surface-muted: #1f2833;
+    --border: #2c3744;
+    --text: #e7ebf0;
+    --muted: #97a3b3;
+    --primary: #5b8ff0;
+    --primary-hover: #7aa5f4;
+    --primary-fg: #0b1220;
+    --primary-soft: #1c2a42;
+    --success: #4cc283;
+    --success-soft: #133024;
+    --danger: #f0776d;
+    --danger-soft: #3a1b19;
+    --warning: #f0c25a;
+    --warning-soft: #33290f;
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --font-sans: 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Cascadia Code', Consolas, 'Liberation Mono', monospace;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-fg: var(--primary-fg);
+  --color-primary-soft: var(--primary-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
