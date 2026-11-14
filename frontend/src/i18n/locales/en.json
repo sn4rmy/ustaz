@@ -123,5 +123,40 @@
     "backToChat": "Back to chat",
     "noTask": "No open task. Get one in the chat with \"Give me a task\".",
     "noItems": "This topic has no tasks yet."
+  },
+  "pricing": {
+    "title": "Pricing",
+    "subtitle": "Free is enough to try it out. Premium removes the daily message limit.",
+    "yourPlan": "Your plan:",
+    "periodEnd": "paid until {{date}}",
+    "usedToday": "Messages today",
+    "usedUnlimited": "Messages today: {{used}}, no limit.",
+    "free": "Free",
+    "unlimited": "Unlimited messages",
+    "limit": "Up to {{count}} messages a day",
+    "currentPlan": "Your current plan",
+    "upgrade": "Upgrade to Premium",
+    "interval": {
+      "month": "month",
+      "year": "year"
+    },
+    "features": {
+      "free": [
+        "Explanations from the course materials",
+        "SQL tasks with automatic checking",
+        "Interface in Kazakh, Russian and English"
+      ],
+      "premium": [
+        "Everything in Free",
+        "Unlimited messages",
+        "Made for exam preparation"
+      ]
+    },
+    "processing": "Payment received, updating your plan…",
+    "success": "Done! Your Premium plan is active.",
+    "pending": "Payment received, but the plan hasn't updated yet. Reload the page in a minute.",
+    "paymentError": "The payment didn't go through. Try again or use another card.",
+    "paddleUnavailable": "Couldn't load the payment page. Check your connection and turn off the ad blocker.",
+    "note": "Payments are processed by Paddle. Card details never reach our server."
   }
 }
