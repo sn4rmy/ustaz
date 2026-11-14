@@ -47,3 +47,14 @@ docs/       diagrams and presentations
 ## Getting started
 
 Setup instructions will be added in Milestone 2.
+
+### Frontend
+
+```bash
+cd frontend
+cp .env.example .env
+npm install
+npm run dev    # http://localhost:5173
+```
+
+Without a running backend, set `VITE_MOCK_API=all` in `frontend/.env`: the app then works on test data. Details are in [frontend/README.md](frontend/README.md).
