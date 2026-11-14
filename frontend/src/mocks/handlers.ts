@@ -275,6 +275,11 @@ function subscription(): Subscription {
   }
 }
 
+// With a real auth backend but mocked billing, the plan shown in the header follows the mock.
+export function withMockPlan(user: User): User {
+  return { ...user, plan: state.plan }
+}
+
 export const mockBilling = {
   plans: (): Promise<PlanInfo[]> =>
     delay([
