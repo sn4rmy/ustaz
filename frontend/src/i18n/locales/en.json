@@ -73,5 +73,55 @@
       "passwordMismatch": "Passwords don't match.",
       "nameTooLong": "The name must be at most {{max}} characters."
     }
+  },
+  "chat": {
+    "startTitle": "Study chat",
+    "startText": "Pick a course: the assistant explains its topics from the course materials, gives SQL tasks and checks them.",
+    "continueText": "You have a session in progress.",
+    "continue": "Continue",
+    "newSession": "Start",
+    "noCourses": "There are no courses yet.",
+    "courseLanguage": "Course language: {{language}}",
+    "topic": "Topic",
+    "topics": "Course topics",
+    "anyTopic": "No topic",
+    "pickTopic": "Pick a topic to enable quick actions.",
+    "emptyTitle": "Ask a question about the course",
+    "emptyText": "Or pick a topic and press \"Explain the topic\".",
+    "thinking": "The assistant is answering…",
+    "inputLabel": "Message",
+    "placeholder": "For example: how is WHERE different from HAVING?",
+    "send": "Send",
+    "upgrade": "Upgrade to Premium",
+    "aiGenerated": "AI-generated",
+    "sources": "Sources",
+    "sourceFragment": "Fragment #{{id}}",
+    "explainPrompt": "Explain the topic \"{{topic}}\"",
+    "hintPrompt": "Give me a hint for the task",
+    "actions": {
+      "explain": "Explain the topic",
+      "hint": "Hint",
+      "task": "Give me a task"
+    },
+    "agents": {
+      "teacher": "Teacher",
+      "examiner": "Examiner",
+      "mentor": "Mentor",
+      "assistant": "Assistant"
+    }
+  },
+  "task": {
+    "difficulty": "Difficulty: {{level}}",
+    "schema": "Tables of the practice database",
+    "yourQuery": "Your SQL query",
+    "check": "Check",
+    "shortcut": "Ctrl + Enter to check",
+    "result": "Query result (rows: {{count}})",
+    "next": "Next task",
+    "skip": "Another task",
+    "askHint": "Ask for a hint in the chat",
+    "backToChat": "Back to chat",
+    "noTask": "No open task. Get one in the chat with \"Give me a task\".",
+    "noItems": "This topic has no tasks yet."
   }
 }
