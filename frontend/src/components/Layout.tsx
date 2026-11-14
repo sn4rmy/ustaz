@@ -46,7 +46,9 @@ export function Layout() {
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-2">
           <Logo />
           {anyMocks && (
-            <Badge className="bg-warning-soft text-warning">{t('common.mockMode')}</Badge>
+            <span className="hidden sm:inline-flex">
+              <Badge className="bg-warning-soft text-warning">{t('common.mockMode')}</Badge>
+            </span>
           )}
           <nav className="order-last flex w-full gap-1 sm:order-none sm:w-auto">
             <NavLink to="/chat" className={navClass}>
@@ -56,14 +58,16 @@ export function Layout() {
               {t('nav.pricing')}
             </NavLink>
           </nav>
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto flex items-center gap-1 sm:gap-2">
             <LanguageSwitcher onChange={saveLanguage} />
             {user && (
               <>
                 <span className="hidden max-w-40 truncate text-sm font-medium md:inline">
                   {user.name}
                 </span>
-                <PlanBadge plan={user.plan} />
+                <span className="hidden sm:inline-flex">
+                  <PlanBadge plan={user.plan} />
+                </span>
                 <Button variant="ghost" onClick={logout} className="px-2.5">
                   {t('nav.logout')}
                 </Button>

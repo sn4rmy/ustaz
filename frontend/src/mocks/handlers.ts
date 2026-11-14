@@ -163,7 +163,8 @@ export const mockChat = {
   messages(sessionId: number): Promise<Message[]> {
     try {
       findSession(sessionId)
-      return delay(state.messages[sessionId] ?? [])
+      // A copy: the page keeps its own list in React state.
+      return delay([...(state.messages[sessionId] ?? [])])
     } catch (error) {
       return Promise.reject(error)
     }
@@ -198,7 +199,7 @@ export const mockChat = {
     }
     history.push(answer)
     save()
-    return delay(answer, 900)
+    return delay({ ...answer }, 900)
   },
 }
 
@@ -253,7 +254,7 @@ export const mockItems = {
     if (!/^(select|with)\b/i.test(sql)) {
       return delay({ ...base, correct: false, score: 0, feedback_code: 'sql_error', error: `near "${sql.split(/\s+/)[0] ?? ''}": syntax error` }, 500)
     }
-    if (item.answers.includes(normalize(sql))) {
+    if (item.answers.map(normalize).includes(normalize(sql))) {
       return delay({ ...base, correct: true, score: 1, feedback_code: 'correct', columns: item.columns, rows: item.rows, error: null }, 500)
     }
     // The fake backend can't run SQL, so a wrong answer comes back without rows.
