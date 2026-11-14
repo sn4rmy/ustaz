@@ -6,7 +6,8 @@
   "nav": {
     "chat": "Чат",
     "pricing": "Тарифтер",
-    "language": "Тіл"
+    "language": "Тіл",
+    "logout": "Шығу"
   },
   "common": {
     "loading": "Жүктелуде…",
@@ -40,5 +41,37 @@
     "correct": "Дұрыс! Сұраныс дұрыс нәтиже қайтарды.",
     "wrong_result": "Сұраныс орындалды, бірақ нәтиже күтілгенге сәйкес келмейді.",
     "sql_error": "Сұраныста қате бар."
+  },
+  "plans": {
+    "free": "Free",
+    "premium": "Premium"
+  },
+  "languages": {
+    "kk": "Қазақша",
+    "ru": "Русский",
+    "en": "English"
+  },
+  "auth": {
+    "loginTitle": "Кіру",
+    "registerTitle": "Тіркелу",
+    "email": "E-mail",
+    "password": "Құпиясөз",
+    "confirmPassword": "Құпиясөзді қайталаңыз",
+    "name": "Аты",
+    "language": "Оқу тілі",
+    "loginButton": "Кіру",
+    "registerButton": "Тіркелу",
+    "noAccount": "Аккаунтыңыз жоқ па?",
+    "toRegister": "Тіркеліңіз",
+    "haveAccount": "Аккаунтыңыз бар ма?",
+    "toLogin": "Кіріңіз",
+    "validation": {
+      "required": "Бұл өрісті толтырыңыз.",
+      "email": "Дұрыс e-mail енгізіңіз.",
+      "passwordShort": "Құпиясөз кемінде {{min}} таңбадан тұруы керек.",
+      "passwordLong": "Құпиясөз тым ұзын: 72 байттан аспауы керек (кириллицамен 36 таңба).",
+      "passwordMismatch": "Құпиясөздер сәйкес келмейді.",
+      "nameTooLong": "Аты {{max}} таңбадан аспауы керек."
+    }
   }
 }
