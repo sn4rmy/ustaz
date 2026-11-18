@@ -21,6 +21,44 @@ export interface RequestOptions {
   auth?: boolean
 }
 
+interface AuthHooks {
+  // Gets a new access token for the refresh token; throws if it's no longer valid.
+  refresh: (refreshToken: string) => Promise<string>
+  // Called when the session can't be restored, so the app can show the login page.
+  onSessionExpired: () => void
+}
+
+let authHooks: AuthHooks | null = null
+
+export function configureAuth(hooks: AuthHooks | null): void {
+  authHooks = hooks
+}
+
+// Parallel requests that all got 401 share one refresh call.
+let refreshing: Promise<boolean> | null = null
+
+function refreshAccessToken(): Promise<boolean> {
+  const refreshToken = tokens.refresh()
+  if (!authHooks || !refreshToken) return Promise.resolve(false)
+  const hooks = authHooks
+  refreshing ??= hooks
+    .refresh(refreshToken)
+    .then((accessToken) => {
+      tokens.saveAccess(accessToken)
+      return true
+    })
+    .catch(() => false)
+    .finally(() => {
+      refreshing = null
+    })
+  return refreshing
+}
+
+function expireSession(): void {
+  tokens.clear()
+  authHooks?.onSessionExpired()
+}
+
 async function readDetail(response: Response): Promise<string> {
   try {
     const data: unknown = await response.json()
@@ -35,22 +73,41 @@ async function readDetail(response: Response): Promise<string> {
   return `http_${response.status}`
 }
 
-export async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
+async function send(path: string, options: RequestOptions): Promise<Response> {
   const { method = 'GET', body, auth = true } = options
   const headers: Record<string, string> = { Accept: 'application/json' }
   if (body !== undefined) headers['Content-Type'] = 'application/json'
   const accessToken = auth ? tokens.access() : null
   if (accessToken) headers.Authorization = `Bearer ${accessToken}`
-
-  let response: Response
   try {
-    response = await fetch(`${API_URL}${path}`, {
+    return await fetch(`${API_URL}${path}`, {
       method,
       headers,
       body: body === undefined ? undefined : JSON.stringify(body),
     })
   } catch {
     throw new ApiError(0, 'network_error')
+  }
+}
+
+export async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
+  const auth = options.auth ?? true
+  let response = await send(path, options)
+
+  if (response.status === 401 && auth) {
+    const detail = await readDetail(response)
+    // The access token lives 30 minutes: get a new one and repeat the request once.
+    if (detail === 'invalid_token' && (await refreshAccessToken())) {
+      response = await send(path, options)
+    } else {
+      expireSession()
+      throw new ApiError(401, detail)
+    }
+    if (response.status === 401) {
+      const retryDetail = await readDetail(response)
+      expireSession()
+      throw new ApiError(401, retryDetail)
+    }
   }
 
   if (!response.ok) throw new ApiError(response.status, await readDetail(response))

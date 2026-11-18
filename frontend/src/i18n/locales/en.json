@@ -6,7 +6,8 @@
   "nav": {
     "chat": "Chat",
     "pricing": "Pricing",
-    "language": "Language"
+    "language": "Language",
+    "logout": "Sign out"
   },
   "common": {
     "loading": "Loading…",
@@ -40,5 +41,37 @@
     "correct": "Correct! The query returned the right result.",
     "wrong_result": "The query ran, but the result doesn't match the expected one.",
     "sql_error": "There's an error in the query."
+  },
+  "plans": {
+    "free": "Free",
+    "premium": "Premium"
+  },
+  "languages": {
+    "kk": "Қазақша",
+    "ru": "Русский",
+    "en": "English"
+  },
+  "auth": {
+    "loginTitle": "Sign in",
+    "registerTitle": "Create an account",
+    "email": "E-mail",
+    "password": "Password",
+    "confirmPassword": "Repeat password",
+    "name": "Name",
+    "language": "Study language",
+    "loginButton": "Sign in",
+    "registerButton": "Sign up",
+    "noAccount": "Don't have an account?",
+    "toRegister": "Sign up",
+    "haveAccount": "Already have an account?",
+    "toLogin": "Sign in",
+    "validation": {
+      "required": "Please fill in this field.",
+      "email": "Enter a valid e-mail.",
+      "passwordShort": "The password must be at least {{min}} characters.",
+      "passwordLong": "The password is too long: at most 72 bytes (36 Cyrillic characters).",
+      "passwordMismatch": "Passwords don't match.",
+      "nameTooLong": "The name must be at most {{max}} characters."
+    }
   }
 }

@@ -2,7 +2,9 @@ import { useTranslation } from 'react-i18next'
 import { Link, NavLink, Outlet } from 'react-router'
 
 import { isMocked } from '../api/config'
-import { Badge } from './ui'
+import type { Language, Plan } from '../api/types'
+import { useAuth } from '../auth/context'
+import { Badge, Button } from './ui'
 import { LanguageSwitcher } from './LanguageSwitcher'
 
 const anyMocks = (['auth', 'courses', 'chat', 'items', 'billing'] as const).some(isMocked)
@@ -23,8 +25,21 @@ export function Logo() {
   )
 }
 
+export function PlanBadge({ plan }: { plan: Plan }) {
+  const { t } = useTranslation()
+  const tone = plan === 'premium' ? 'bg-primary text-primary-fg' : 'bg-surface-muted text-muted'
+  return <Badge className={tone}>{t(`plans.${plan}`)}</Badge>
+}
+
 export function Layout() {
   const { t } = useTranslation()
+  const { user, logout, updateProfile } = useAuth()
+
+  function saveLanguage(language: Language) {
+    // Not critical: the interface has already switched, the profile can lag behind.
+    if (user && user.language !== language) updateProfile({ language }).catch(() => {})
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-10 border-b border-border bg-surface/95 backdrop-blur">
@@ -42,7 +57,18 @@ export function Layout() {
             </NavLink>
           </nav>
           <div className="ml-auto flex items-center gap-2">
-            <LanguageSwitcher />
+            <LanguageSwitcher onChange={saveLanguage} />
+            {user && (
+              <>
+                <span className="hidden max-w-40 truncate text-sm font-medium md:inline">
+                  {user.name}
+                </span>
+                <PlanBadge plan={user.plan} />
+                <Button variant="ghost" onClick={logout} className="px-2.5">
+                  {t('nav.logout')}
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </header>

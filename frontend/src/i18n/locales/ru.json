@@ -6,7 +6,8 @@
   "nav": {
     "chat": "Чат",
     "pricing": "Тарифы",
-    "language": "Язык"
+    "language": "Язык",
+    "logout": "Выйти"
   },
   "common": {
     "loading": "Загрузка…",
@@ -40,5 +41,37 @@
     "correct": "Верно! Запрос вернул правильный результат.",
     "wrong_result": "Запрос выполнился, но результат не совпадает с ожидаемым.",
     "sql_error": "Ошибка в запросе."
+  },
+  "plans": {
+    "free": "Free",
+    "premium": "Premium"
+  },
+  "languages": {
+    "kk": "Қазақша",
+    "ru": "Русский",
+    "en": "English"
+  },
+  "auth": {
+    "loginTitle": "Вход",
+    "registerTitle": "Регистрация",
+    "email": "E-mail",
+    "password": "Пароль",
+    "confirmPassword": "Повторите пароль",
+    "name": "Имя",
+    "language": "Язык обучения",
+    "loginButton": "Войти",
+    "registerButton": "Зарегистрироваться",
+    "noAccount": "Нет аккаунта?",
+    "toRegister": "Зарегистрируйтесь",
+    "haveAccount": "Уже есть аккаунт?",
+    "toLogin": "Войдите",
+    "validation": {
+      "required": "Заполните это поле.",
+      "email": "Введите корректный e-mail.",
+      "passwordShort": "Пароль должен быть не короче {{min}} символов.",
+      "passwordLong": "Пароль слишком длинный: не больше 72 байт (36 символов кириллицей).",
+      "passwordMismatch": "Пароли не совпадают.",
+      "nameTooLong": "Имя не длиннее {{max}} символов."
+    }
   }
 }
