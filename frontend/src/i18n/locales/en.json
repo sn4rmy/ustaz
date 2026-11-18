@@ -1,0 +1,44 @@
+{
+  "app": {
+    "name": "Ustaz",
+    "tagline": "An assistant for learning SQL from your course materials"
+  },
+  "nav": {
+    "chat": "Chat",
+    "pricing": "Pricing",
+    "language": "Language"
+  },
+  "common": {
+    "loading": "Loading…",
+    "retry": "Retry",
+    "back": "Back",
+    "mockMode": "Test data"
+  },
+  "pages": {
+    "login": "Sign in",
+    "register": "Sign up",
+    "chat": "Chat",
+    "task": "SQL task",
+    "pricing": "Pricing",
+    "notFound": "Page not found",
+    "notFoundText": "This page doesn't exist. Go back to the chat.",
+    "toHome": "Go home"
+  },
+  "errors": {
+    "network_error": "Can't reach the server. Check that the backend is running.",
+    "not_authenticated": "Please sign in.",
+    "invalid_token": "Your session has expired, please sign in again.",
+    "invalid_credentials": "Wrong e-mail or password.",
+    "email_taken": "This e-mail is already registered.",
+    "admin_required": "Administrator rights are required.",
+    "daily_limit_reached": "You've used all messages of the Free plan for today.",
+    "validation_error": "Please check the form fields.",
+    "not_found": "Not found.",
+    "unknown": "Something went wrong. Please try again."
+  },
+  "feedback": {
+    "correct": "Correct! The query returned the right result.",
+    "wrong_result": "The query ran, but the result doesn't match the expected one.",
+    "sql_error": "There's an error in the query."
+  }
+}
