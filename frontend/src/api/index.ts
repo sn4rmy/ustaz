@@ -1,4 +1,11 @@
-import { mockAuth, mockBilling, mockChat, mockCourses, mockItems } from '../mocks/handlers'
+import {
+  mockAuth,
+  mockBilling,
+  mockChat,
+  mockCourses,
+  mockItems,
+  withMockPlan,
+} from '../mocks/handlers'
 import { request } from './client'
 import { isMocked } from './config'
 import { tokens } from './tokens'
@@ -44,13 +51,20 @@ export const authApi = {
         }),
 }
 
+// The plan comes from billing, so with mocked billing it is taken from the test data.
+const planFromBilling = (user: User): User =>
+  isMocked('billing') && !isMocked('auth') ? withMockPlan(user) : user
+
 export const usersApi = {
-  me: (): Promise<User> => (isMocked('auth') ? mockAuth.me(tokens.access()) : request('/api/users/me')),
+  me: (): Promise<User> =>
+    isMocked('auth')
+      ? mockAuth.me(tokens.access())
+      : request<User>('/api/users/me').then(planFromBilling),
 
   update: (data: UserUpdate): Promise<User> =>
     isMocked('auth')
       ? mockAuth.updateMe(tokens.access(), data)
-      : request('/api/users/me', { method: 'PATCH', body: data }),
+      : request<User>('/api/users/me', { method: 'PATCH', body: data }).then(planFromBilling),
 }
 
 export const coursesApi = {
