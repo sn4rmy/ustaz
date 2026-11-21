@@ -12,3 +12,4 @@ bcrypt==5.0.0
 pyjwt==2.15.1
 pypdf==7.1.1
 python-multipart==0.0.34
+langgraph==1.2.20

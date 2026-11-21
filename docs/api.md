@@ -178,6 +178,18 @@ E-mail сохраняется в нижнем регистре: `Aliya@Mail.com`
 {"id": 10, "course_id": 1, "created_at": "2026-11-16T09:00:00Z"}
 ```
 
+Ошибки: 404 `course_not_found`.
+
+### GET /api/sessions/{session_id}
+
+Ответ 200 — та же сессия, что в `POST /api/sessions`:
+
+```json
+{"id": 10, "course_id": 1, "created_at": "2026-11-16T09:00:00Z"}
+```
+
+Ошибки: 404 `session_not_found` — сессии нет или она другого пользователя. Так же отвечают остальные эндпоинты с `{session_id}`.
+
 ### GET /api/sessions/{session_id}/messages
 
 Ответ 200, сообщения от старых к новым:
@@ -191,7 +203,7 @@ E-mail сохраняется в нижнем регистре: `Aliya@Mail.com`
 
 ### POST /api/sessions/{session_id}/messages
 
-Запрос. `topic_id` и `action` необязательные. `action` — `explain` (объяснение) или `hint` (наводящий вопрос). Если у студента есть задание без попытки, backend сам отвечает в режиме `hint`.
+Запрос. `content` — от 1 до 4000 символов. `topic_id` и `action` необязательные. `action` — `explain` (объяснение) или `hint` (наводящий вопрос), по умолчанию `explain`. Если у студента есть задание без попытки, backend сам отвечает в режиме `hint`. Указанная тема запоминается в сессии для следующих сообщений. Ответ — на языке из профиля пользователя.
 
 ```json
 {"content": "Что делает GROUP BY?", "topic_id": 3, "action": "explain"}
@@ -213,7 +225,7 @@ E-mail сохраняется в нижнем регистре: `Aliya@Mail.com`
 
 Если в материалах курса ответа нет, `citations` пустой, а в `content` об этом сказано прямо.
 
-Ошибки: 429 `daily_limit_reached` — исчерпан дневной лимит плана Free.
+Ошибки: 404 `session_not_found`, `topic_not_found` (темы нет или она из другого курса); 429 `daily_limit_reached` — исчерпан дневной лимит плана Free; 503 `llm_unavailable` — модель не ответила, сообщение не сохранено и в лимит не засчитано.
 
 Сообщения с `ai_generated: true` frontend показывает с пометкой «Сгенерировано ИИ».
 
