@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     openrouter_api_key: str | None = None
 
     payment_provider: str = "mock"
+    free_daily_message_limit: int = 20
 
     @property
     def cors_origin_list(self) -> list[str]:
