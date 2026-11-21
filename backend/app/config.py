@@ -20,6 +20,8 @@ class Settings(BaseSettings):
     # Only the key of the selected provider is needed, so both are optional here.
     gemini_api_key: str | None = None
     openrouter_api_key: str | None = None
+    # Original files of uploaded materials, kept to re-embed them later.
+    materials_dir: str = "data/materials"
 
     payment_provider: str = "mock"
     free_daily_message_limit: int = 20
