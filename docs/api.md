@@ -115,7 +115,7 @@ E-mail сохраняется в нижнем регистре: `Aliya@Mail.com`
 
 ### GET /api/courses/{course_id}/topics
 
-Ответ 200, темы по порядку:
+Ответ 200, темы по порядку (`position`). Курса нет — 404 `course_not_found`.
 
 ```json
 [
@@ -157,6 +157,8 @@ E-mail сохраняется в нижнем регистре: `Aliya@Mail.com`
 ```json
 {"id": 3, "title": "Конспект: JOIN", "chunks_count": 12}
 ```
+
+Ошибки: 400 `unsupported_file_type` (не PDF, `.md` или `.txt`), `unreadable_file` (повреждённый PDF или текст не в UTF-8), `empty_material` (в файле нет текста); 404 `course_not_found`; 503 `llm_unavailable` (не удалось посчитать эмбеддинги, материал не сохранён).
 
 ## Чат
 
