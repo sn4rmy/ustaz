@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -25,6 +27,11 @@ class Settings(BaseSettings):
 
     payment_provider: str = "mock"
     free_daily_message_limit: int = 20
+    paddle_environment: Literal["sandbox", "production"] = "sandbox"
+    # Needed only when payment_provider is "paddle", see docs/payments.md.
+    paddle_client_token: str | None = None
+    paddle_price_id: str | None = None
+    paddle_webhook_secret: str | None = None
 
     @property
     def cors_origin_list(self) -> list[str]:

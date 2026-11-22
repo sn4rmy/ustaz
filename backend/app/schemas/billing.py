@@ -29,3 +29,11 @@ class SubscriptionOut(BaseModel):
 
 class MockCheckout(BaseModel):
     provider: Literal["mock"] = "mock"
+
+
+class PaddleCheckout(BaseModel):
+    provider: Literal["paddle"] = "paddle"
+    environment: Literal["sandbox", "production"]
+    client_token: str
+    price_id: str
+    custom_data: dict[str, str]
