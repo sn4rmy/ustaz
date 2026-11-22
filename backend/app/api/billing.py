@@ -1,13 +1,20 @@
-from fastapi import APIRouter, HTTPException, status
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, Header, HTTPException, Request, status
 from sqlalchemy.orm import Session
 
 from app.api.deps import CurrentUser, DbSession
-from app.billing import mock
+from app.billing import mock, paddle
 from app.billing.limits import daily_limit, messages_used_today
 from app.billing.plans import list_plans
 from app.billing.subscriptions import get_subscription
 from app.config import settings
-from app.schemas.billing import MockCheckout, PlanInfo, SubscriptionOut
+from app.schemas.billing import (
+    MockCheckout,
+    PaddleCheckout,
+    PlanInfo,
+    SubscriptionOut,
+)
 
 router = APIRouter(prefix="/billing", tags=["billing"])
 
@@ -34,7 +41,9 @@ def read_subscription(user: CurrentUser, db: DbSession) -> SubscriptionOut:
 
 
 @router.post("/checkout")
-def checkout(user: CurrentUser) -> MockCheckout:
+def checkout(user: CurrentUser) -> PaddleCheckout | MockCheckout:
+    if settings.payment_provider == "paddle":
+        return paddle.checkout_data(user)
     return MockCheckout()
 
 
@@ -46,3 +55,25 @@ def complete_mock_checkout(user: CurrentUser, db: DbSession) -> SubscriptionOut:
     mock.complete_checkout(db, user.id)
     db.commit()
     return to_subscription_out(db, user.id)
+
+
+# The body can only be read with await, so this small dependency is async while
+# the endpoint stays sync like the others.
+async def raw_body(request: Request) -> bytes:
+    return await request.body()
+
+
+@router.post("/webhook")
+def paddle_webhook(
+    body: Annotated[bytes, Depends(raw_body)],
+    db: DbSession,
+    paddle_signature: Annotated[str | None, Header()] = None,
+) -> dict[str, bool]:
+    # The signature covers the exact bytes Paddle sent, so it is checked on the raw
+    # body before any JSON parsing.
+    secret = settings.paddle_webhook_secret
+    if not paddle.verify_signature(body, paddle_signature, secret):
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "invalid_signature")
+    paddle.handle_event(db, body)
+    db.commit()
+    return {"received": True}
