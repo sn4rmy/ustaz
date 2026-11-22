@@ -98,9 +98,11 @@
     "sourceFragment": "Fragment #{{id}}",
     "explainPrompt": "Explain the topic \"{{topic}}\"",
     "hintPrompt": "Give me a hint for the task",
+    "notUnderstoodPrompt": "I didn't understand \"{{topic}}\", explain it more simply",
     "actions": {
       "explain": "Explain the topic",
       "hint": "Hint",
+      "notUnderstood": "I don't get it",
       "task": "Give me a task"
     },
     "agents": {

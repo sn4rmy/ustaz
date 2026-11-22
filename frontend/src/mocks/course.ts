@@ -72,7 +72,7 @@ export interface MockItem {
   topicId: number
   prompt: string
   difficulty: number
-  // Accepted answers after normalize() in mocks/items.ts.
+  // Accepted answers after normalize() in mocks/handlers.ts.
   answers: string[]
   columns: string[]
   rows: Cell[][]

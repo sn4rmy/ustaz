@@ -98,9 +98,11 @@
     "sourceFragment": "Фрагмент №{{id}}",
     "explainPrompt": "Объясни тему «{{topic}}»",
     "hintPrompt": "Дай подсказку к заданию",
+    "notUnderstoodPrompt": "Не понял тему «{{topic}}», объясни проще",
     "actions": {
       "explain": "Объясни тему",
       "hint": "Подсказка",
+      "notUnderstood": "Не понял",
       "task": "Дай задание"
     },
     "agents": {

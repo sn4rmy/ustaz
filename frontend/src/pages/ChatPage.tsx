@@ -242,6 +242,15 @@ function ChatSession({ sessionId }: { sessionId: number }) {
             </Button>
             <Button
               variant="secondary"
+              disabled={topicId === undefined || sending}
+              onClick={() =>
+                void send(t('chat.notUnderstoodPrompt', { topic: topicTitle ?? '' }), 'explain')
+              }
+            >
+              {t('chat.actions.notUnderstood')}
+            </Button>
+            <Button
+              variant="secondary"
               disabled={topicId === undefined}
               loading={loadingTask}
               onClick={() => void openTask()}
