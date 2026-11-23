@@ -86,6 +86,11 @@ export const chatApi = {
       ? loadMocks().then((m) => m.mockChat.createSession(courseId))
       : request('/api/sessions', { method: 'POST', body: { course_id: courseId } }),
 
+  session: (sessionId: number): Promise<StudySession> =>
+    isMocked('chat')
+      ? loadMocks().then((m) => m.mockChat.session(sessionId))
+      : request(`/api/sessions/${sessionId}`),
+
   messages: (sessionId: number): Promise<Message[]> =>
     isMocked('chat')
       ? loadMocks().then((m) => m.mockChat.messages(sessionId))

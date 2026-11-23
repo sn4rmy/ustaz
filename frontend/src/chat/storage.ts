@@ -1,14 +1,13 @@
 import type { Item } from '../api/types'
 
-// The API has no "get session" endpoint, so the browser remembers what the chat needs:
-// which course a session belongs to, the selected topic and the open task.
+// What the browser remembers about the chat: the last session, the selected topic and the
+// open task. The course of a session comes from GET /api/sessions/{id}.
 
 const SESSIONS_KEY = 'ustaz_sessions'
 const LAST_SESSION_KEY = 'ustaz_last_session'
 const TASK_KEY = (sessionId: number) => `ustaz_task_${sessionId}`
 
 interface SessionInfo {
-  courseId: number
   topicId?: number
 }
 
