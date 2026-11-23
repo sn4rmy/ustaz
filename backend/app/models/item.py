@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, SmallInteger, String, Text, func
+from sqlalchemy import DateTime, ForeignKey, SmallInteger, String, Text, false, func
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -22,6 +22,8 @@ class Item(Base):
     # SQL script that builds the SQLite database for the sandbox.
     fixture: Mapped[str | None] = mapped_column(Text)
     difficulty: Mapped[int] = mapped_column(SmallInteger, server_default="1")
+    # The task asks for ORDER BY, so the order of rows is graded too.
+    ordered: Mapped[bool] = mapped_column(server_default=false())
 
 
 class Attempt(Base):
