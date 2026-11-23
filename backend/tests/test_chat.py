@@ -307,8 +307,11 @@ def test_daily_limit(
 
 
 @pytest.mark.usefixtures("course")
-def test_llm_error_saves_and_counts_nothing(
-    client: TestClient, test_engine: Engine, monkeypatch: pytest.MonkeyPatch
+def test_llm_error_is_logged_and_saves_and_counts_nothing(
+    client: TestClient,
+    test_engine: Engine,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
 ) -> None:
     def fail(model: str, system: str, messages: list) -> tuple[str, int, int]:
         raise LLMError("provider is down")
@@ -322,7 +325,9 @@ def test_llm_error_saves_and_counts_nothing(
     )
 
     assert response.status_code == 503
+    # The reason stays in the server log and doesn't reach the client.
     assert response.json() == {"detail": "llm_unavailable"}
+    assert "provider is down" in caplog.text
     with Session(test_engine) as db:
         assert db.scalar(select(func.count()).select_from(Message)) == 0
         assert db.scalar(select(func.count()).select_from(AgentTrace)) == 0

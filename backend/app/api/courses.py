@@ -1,3 +1,4 @@
+import logging
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Form, HTTPException, UploadFile, status
@@ -18,6 +19,7 @@ from app.schemas.course import (
 )
 
 router = APIRouter(prefix="/courses", tags=["courses"])
+logger = logging.getLogger(__name__)
 
 
 def get_course(db: Session, course_id: int) -> Course:
@@ -82,7 +84,8 @@ def upload_material(
         )
     except MaterialError as error:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, str(error)) from None
-    except LLMError:
+    except LLMError as error:
+        logger.warning("Material upload failed, LLM error: %s", error)
         raise HTTPException(
             status.HTTP_503_SERVICE_UNAVAILABLE, "llm_unavailable"
         ) from None
