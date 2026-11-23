@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import APIRouter, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -11,6 +13,7 @@ from app.orchestrator.state import PERSISTED_FIELDS, SessionState
 from app.schemas.session import MessageCreate, MessageOut, SessionCreate, SessionOut
 
 router = APIRouter(prefix="/sessions", tags=["sessions"])
+logger = logging.getLogger(__name__)
 
 HISTORY_SIZE = 6
 
@@ -95,7 +98,9 @@ def send_message(
 
     try:
         result = run_turn(db, state)
-    except LLMError:
+    except LLMError as error:
+        # The client gets only the code; the reason (429, bad key, timeout) is for us.
+        logger.warning("Chat answer failed, LLM error: %s", error)
         raise HTTPException(
             status.HTTP_503_SERVICE_UNAVAILABLE, "llm_unavailable"
         ) from None

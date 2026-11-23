@@ -6,6 +6,7 @@ from sqlalchemy import Engine, func, select
 from sqlalchemy.orm import Session
 
 from app.config import settings
+from app.llm import LLMError, fake
 from app.models import Chunk, Course, Material
 from app.rag import add_material, retrieve_materials
 from app.rag.loader import extract_text
@@ -93,6 +94,27 @@ def test_empty_material(client: TestClient, test_engine: Engine) -> None:
     result = upload(client, headers, "notes.txt", b"   \n\n  ")
 
     assert result == {"status": 400, "body": {"detail": "empty_material"}}
+
+
+def test_embedding_error_is_logged_and_saves_nothing(
+    client: TestClient,
+    test_engine: Engine,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    def fail(texts: list[str]) -> list[list[float]]:
+        raise LLMError("429 quota exceeded")
+
+    monkeypatch.setattr(fake, "embed", fail)
+    headers = headers_for(client, test_engine, "admin")
+    create_course(test_engine, "SQL")
+
+    result = upload(client, headers, "notes.md", GROUP_BY_NOTES.encode())
+
+    assert result == {"status": 503, "body": {"detail": "llm_unavailable"}}
+    assert "429 quota exceeded" in caplog.text
+    with Session(test_engine) as db:
+        assert db.scalar(select(func.count()).select_from(Material)) == 0
 
 
 def test_student_cannot_upload(client: TestClient, test_engine: Engine) -> None:
