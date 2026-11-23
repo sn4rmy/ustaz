@@ -231,45 +231,47 @@ E-mail сохраняется в нижнем регистре: `Aliya@Mail.com`
 
 ## Задания
 
-Эталонный запрос (`answer_key`) не возвращается ни в одном ответе.
+Эталонный запрос (`answer_key`) не возвращается ни в одном ответе. Задания и попытки не засчитываются в дневной лимит сообщений: модель при проверке не вызывается.
 
 ### POST /api/sessions/{session_id}/items/next
 
-Выдаёт следующее задание по теме.
+Выдаёт следующее задание по теме: нерешённое, сначала самое лёгкое. Если решены все — любое задание темы. Пока задание не решено верно, оно выдаётся снова. Задание становится открытым в сессии: пока по нему нет попытки, Teacher в чате даёт только наводящий вопрос.
 
 Запрос:
 
 ```json
-{"topic_id": 3}
+{"topic_id": 4}
 ```
 
 Ответ 200:
 
 ```json
 {
-  "id": 12,
-  "topic_id": 3,
+  "id": 10,
+  "topic_id": 4,
   "type": "sql_query",
-  "prompt": "Выведите количество студентов в каждой группе.",
+  "prompt": "Выведите имя каждого сотрудника и название его отдела. Сотрудников без отдела не выводите. Столбцы: имя сотрудника, название отдела.",
   "schema": [
-    {"table": "students", "columns": ["id INTEGER", "name TEXT", "group_name TEXT"]},
-    {"table": "grades", "columns": ["student_id INTEGER", "course TEXT", "grade INTEGER"]}
+    {"table": "departments", "columns": ["id INTEGER", "name TEXT"]},
+    {"table": "employees", "columns": ["id INTEGER", "name TEXT", "department_id INTEGER", "salary INTEGER", "hire_date TEXT"]}
   ],
   "difficulty": 1
 }
 ```
 
-Ошибки: 404 — в теме нет заданий.
+Ошибки: 404 `session_not_found`, `topic_not_found` (темы нет или она из другого курса), `no_items` (в теме нет заданий).
 
 ### POST /api/sessions/{session_id}/attempts
 
-Проверяет запрос студента исполнением в учебной базе.
+Проверяет запрос студента исполнением в учебной базе SQLite и сравнивает результат с результатом эталона.
 
 Запрос:
 
 ```json
-{"item_id": 12, "answer": "SELECT group_name, COUNT(*) FROM students GROUP BY group_name"}
+{"item_id": 10, "answer": "SELECT e.name, d.name FROM employees e JOIN departments d ON d.id = e.department_id"}
 ```
+
+`answer` — от 1 до 4000 символов, пробелы по краям обрезаются.
 
 Ответ 201:
 
@@ -279,15 +281,23 @@ E-mail сохраняется в нижнем регистре: `Aliya@Mail.com`
   "correct": true,
   "score": 1.0,
   "feedback_code": "correct",
-  "columns": ["group_name", "COUNT(*)"],
-  "rows": [["IT-2401", 12], ["IT-2402", 9]],
+  "columns": ["name", "name"],
+  "rows": [["Айгерим Садыкова", "Разработка"], ["Ержан Мукашев", "Разработка"]],
   "error": null
 }
 ```
 
 - `feedback_code` — `correct`, `wrong_result` или `sql_error`. Текст для пользователя frontend берёт из переводов.
-- `columns` и `rows` — результат запроса студента, не больше 50 строк.
-- `error` — текст ошибки SQLite при `sql_error`, иначе `null`. Запрос, который меняет данные, тоже возвращает `sql_error`.
+- Сравниваются число и порядок столбцов и строки результата. Имена столбцов не важны: `COUNT(*)` и `COUNT(*) AS total` — одно и то же. Порядок строк важен, только если задание требует сортировку.
+- `columns` и `rows` — результат запроса студента, не больше 50 строк. При `sql_error` оба пустые.
+- `error` — при `sql_error` текст ошибки на английском, иначе `null`. Обычно это текст SQLite (`no such table: staff`), а также:
+  - `only SELECT and WITH queries are allowed` — запрос меняет данные или настройки (INSERT, UPDATE, DELETE, DROP, ATTACH, PRAGMA и т. п.);
+  - `the query took longer than 2 seconds`;
+  - `the result has more than 1000 rows`;
+  - `the query returned no result` — пустой запрос или только комментарий.
+- После верной попытки задание закрывается; после неверной остаётся открытым, можно пробовать снова.
+
+Ошибки: 404 `session_not_found`, `item_not_found` (задания нет или оно из другого курса); 422 — пустой или слишком длинный `answer`.
 
 ## Оплата
 
