@@ -23,10 +23,10 @@ import type {
 
 // One function per endpoint of docs/api.md. VITE_MOCK_API decides which ones use test data.
 
-// VITE_MOCK_API is replaced by a constant at build time. With "none" the import() branch is
-// dropped, so the test data from src/mocks never gets into dist.
+// VITE_MOCK_API is replaced by a constant at build time. With "none" (also the default) the
+// import() branch is dropped, so the test data from src/mocks never gets into dist.
 function loadMocks(): Promise<typeof MockHandlers> {
-  return import.meta.env.VITE_MOCK_API === 'none'
+  return (import.meta.env.VITE_MOCK_API ?? 'none') === 'none'
     ? Promise.reject(new Error('API mocks are disabled'))
     : import('../mocks/handlers')
 }
