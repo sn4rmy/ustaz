@@ -46,7 +46,42 @@ docs/       diagrams and presentations
 
 ## Getting started
 
-Setup instructions will be added in Milestone 2.
+### Whole project in Docker
+
+Needs [Docker Desktop](https://www.docker.com/products/docker-desktop/) (on Windows with WSL 2).
+
+1. Create the settings file and set `JWT_SECRET` in it: any random string of at least 32 characters. For a real LLM also set `GEMINI_API_KEY`, or use `LLM_PROVIDER=fake` to run without a key.
+
+   ```bash
+   cp .env.example .env    # Windows: copy .env.example .env
+   ```
+
+2. Build and start the database, backend and frontend:
+
+   ```bash
+   docker compose up --build
+   ```
+
+   - site: http://localhost:5173
+   - API docs: http://localhost:8000/docs
+
+   Database migrations run automatically when the backend starts.
+
+3. Fill in the SQL course (topics and lecture notes):
+
+   ```bash
+   docker compose exec backend python -m app.scripts.seed
+   ```
+
+4. Create an administrator (the password is asked for):
+
+   ```bash
+   docker compose exec backend python -m app.scripts.create_admin --email admin@example.com --name Admin
+   ```
+
+5. Stop with `docker compose down`. The data stays; `docker compose down -v` also deletes the database and uploaded materials.
+
+Payments use the test provider by default. To pay through the Paddle sandbox, see [docs/payments.md](docs/payments.md).
 
 ### Frontend
 
