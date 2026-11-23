@@ -2,7 +2,8 @@ export const API_URL = (import.meta.env.VITE_API_URL ?? 'http://localhost:8000')
 
 export type ApiModule = 'auth' | 'courses' | 'chat' | 'items' | 'billing'
 
-const MOCK_SETTING = (import.meta.env.VITE_MOCK_API ?? 'courses,chat,items,billing').trim()
+// Without VITE_MOCK_API every request goes to the backend.
+const MOCK_SETTING = (import.meta.env.VITE_MOCK_API ?? 'none').trim()
 const mockedModules = new Set(
   MOCK_SETTING.split(',')
     .map((name) => name.trim())

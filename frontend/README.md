@@ -24,9 +24,9 @@ Other commands:
 | Variable | Default | Meaning |
 |---|---|---|
 | `VITE_API_URL` | `http://localhost:8000` | Backend address |
-| `VITE_MOCK_API` | `courses,chat,items,billing` | Which API parts use test data: `all`, `none` or a list of `auth`, `courses`, `chat`, `items`, `billing` |
+| `VITE_MOCK_API` | `none` | Which API parts use test data: `all`, `none` or a list of `auth`, `courses`, `chat`, `items`, `billing` |
 
-With `VITE_MOCK_API=all` the app works without a backend at all. Test data lives in `src/mocks/` and follows the formats of [docs/api.md](../docs/api.md). Its state is kept in the browser's localStorage (`ustaz_mock_state`); clear it to start over.
+By default every request goes to the backend. With `VITE_MOCK_API=all` the app works without a backend at all. Test data lives in `src/mocks/` and follows the formats of [docs/api.md](../docs/api.md). Its state is kept in the browser's localStorage (`ustaz_mock_state`); clear it to start over.
 
 ## Structure
 
