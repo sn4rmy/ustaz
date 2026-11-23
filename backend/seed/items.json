@@ -1,0 +1,102 @@
+{
+  "SELECT и WHERE": [
+    {
+      "prompt": "Выведите имена и зарплаты сотрудников, у которых зарплата больше 500 000. Столбцы: имя, зарплата.",
+      "answer_key": "SELECT name, salary FROM employees WHERE salary > 500000",
+      "difficulty": 1,
+      "ordered": false
+    },
+    {
+      "prompt": "Выведите имена сотрудников, у которых не указан отдел.",
+      "answer_key": "SELECT name FROM employees WHERE department_id IS NULL",
+      "difficulty": 2,
+      "ordered": false
+    },
+    {
+      "prompt": "Выведите имена и даты приёма сотрудников отдела с id 2, которых приняли на работу 1 января 2020 года или позже. Столбцы: имя, дата приёма.",
+      "answer_key": "SELECT name, hire_date FROM employees WHERE department_id = 2 AND hire_date >= '2020-01-01'",
+      "difficulty": 3,
+      "ordered": false
+    }
+  ],
+  "Сортировка и LIMIT": [
+    {
+      "prompt": "Выведите имена и зарплаты сотрудников, у которых указана зарплата, от большей зарплаты к меньшей. Столбцы: имя, зарплата.",
+      "answer_key": "SELECT name, salary FROM employees WHERE salary IS NOT NULL ORDER BY salary DESC",
+      "difficulty": 1,
+      "ordered": true
+    },
+    {
+      "prompt": "Выведите имена и даты приёма трёх сотрудников, которых приняли на работу позже всех. Первым — самый новый сотрудник. Столбцы: имя, дата приёма.",
+      "answer_key": "SELECT name, hire_date FROM employees ORDER BY hire_date DESC LIMIT 3",
+      "difficulty": 2,
+      "ordered": true
+    },
+    {
+      "prompt": "Выведите имена сотрудников, у которых зарплата вторая, третья и четвёртая по величине, в порядке убывания зарплаты.",
+      "answer_key": "SELECT name FROM employees ORDER BY salary DESC LIMIT 3 OFFSET 1",
+      "difficulty": 3,
+      "ordered": true
+    }
+  ],
+  "Агрегаты и GROUP BY": [
+    {
+      "prompt": "Сколько всего сотрудников в компании? Выведите одно число.",
+      "answer_key": "SELECT COUNT(*) FROM employees",
+      "difficulty": 1,
+      "ordered": false
+    },
+    {
+      "prompt": "Для каждого отдела выведите id отдела и число его сотрудников. Сотрудников без отдела не учитывайте. Столбцы: id отдела, число сотрудников.",
+      "answer_key": "SELECT department_id, COUNT(*) FROM employees WHERE department_id IS NOT NULL GROUP BY department_id",
+      "difficulty": 2,
+      "ordered": false
+    },
+    {
+      "prompt": "Выведите id отделов, в которых средняя зарплата больше 400 000, и среднюю зарплату в каждом из них. Сотрудников без отдела не учитывайте. Столбцы: id отдела, средняя зарплата.",
+      "answer_key": "SELECT department_id, AVG(salary) FROM employees WHERE department_id IS NOT NULL GROUP BY department_id HAVING AVG(salary) > 400000",
+      "difficulty": 3,
+      "ordered": false
+    }
+  ],
+  "JOIN": [
+    {
+      "prompt": "Выведите имя каждого сотрудника и название его отдела. Сотрудников без отдела не выводите. Столбцы: имя сотрудника, название отдела.",
+      "answer_key": "SELECT e.name, d.name FROM employees e JOIN departments d ON d.id = e.department_id",
+      "difficulty": 1,
+      "ordered": false
+    },
+    {
+      "prompt": "Выведите имена всех сотрудников и названия их отделов. У сотрудников без отдела вместо названия должно быть NULL. Столбцы: имя сотрудника, название отдела.",
+      "answer_key": "SELECT e.name, d.name FROM employees e LEFT JOIN departments d ON d.id = e.department_id",
+      "difficulty": 2,
+      "ordered": false
+    },
+    {
+      "prompt": "Выведите названия всех отделов и число сотрудников в каждом, включая отделы без сотрудников (у них должно быть 0). Столбцы: название отдела, число сотрудников.",
+      "answer_key": "SELECT d.name, COUNT(e.id) FROM departments d LEFT JOIN employees e ON e.department_id = d.id GROUP BY d.id",
+      "difficulty": 3,
+      "ordered": false
+    }
+  ],
+  "Подзапросы": [
+    {
+      "prompt": "Выведите имена и зарплаты сотрудников, у которых зарплата выше средней по компании. Столбцы: имя, зарплата.",
+      "answer_key": "SELECT name, salary FROM employees WHERE salary > (SELECT AVG(salary) FROM employees)",
+      "difficulty": 1,
+      "ordered": false
+    },
+    {
+      "prompt": "Выведите имена сотрудников отдела «Продажи». Id отдела в запросе не пишите — найдите его по названию.",
+      "answer_key": "SELECT name FROM employees WHERE department_id = (SELECT id FROM departments WHERE name = 'Продажи')",
+      "difficulty": 2,
+      "ordered": false
+    },
+    {
+      "prompt": "Выведите названия отделов, в которых нет ни одного сотрудника.",
+      "answer_key": "SELECT name FROM departments WHERE id NOT IN (SELECT department_id FROM employees WHERE department_id IS NOT NULL)",
+      "difficulty": 3,
+      "ordered": false
+    }
+  ]
+}
