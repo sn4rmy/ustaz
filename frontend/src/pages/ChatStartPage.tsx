@@ -38,7 +38,7 @@ export function ChatStartPage() {
     setError(null)
     try {
       const session = await chatApi.createSession(course.id)
-      chatStorage.saveSession(session.id, { courseId: course.id })
+      chatStorage.saveSession(session.id, {})
       navigate(`/chat/${session.id}`)
     } catch (err) {
       setError(errorText(t, err))

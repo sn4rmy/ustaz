@@ -44,14 +44,16 @@ function ChatSession({ sessionId }: { sessionId: number }) {
     let cancelled = false
     async function load() {
       try {
-        // A session opened from another browser has no saved course: take the first one.
-        const courseId = stored?.courseId ?? (await coursesApi.list())[0]?.id
-        const [history, courseTopics] = await Promise.all([
+        // The course comes from the backend, so a session opened in another browser
+        // shows the topics of its own course.
+        const [session, history] = await Promise.all([
+          chatApi.session(sessionId),
           chatApi.messages(sessionId),
-          courseId === undefined ? Promise.resolve([]) : coursesApi.topics(courseId),
         ])
+        const courseTopics = await coursesApi.topics(session.course_id)
         if (cancelled) return
-        if (courseId !== undefined && !stored) chatStorage.saveSession(sessionId, { courseId })
+        // Remember it as the last session, e.g. when it was opened by a link.
+        if (!stored) chatStorage.saveSession(sessionId, {})
         setMessages(history)
         setTopics([...courseTopics].sort((a, b) => a.position - b.position))
       } catch (err) {
@@ -75,7 +77,7 @@ function ChatSession({ sessionId }: { sessionId: number }) {
 
   function selectTopic(id: number | undefined) {
     setTopicId(id)
-    if (stored) chatStorage.saveSession(sessionId, { ...stored, topicId: id })
+    chatStorage.saveSession(sessionId, { ...stored, topicId: id })
   }
 
   async function send(content: string, action?: MessageAction, topic = topicId) {
