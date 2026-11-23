@@ -98,9 +98,11 @@
     "sourceFragment": "№{{id}} үзінді",
     "explainPrompt": "«{{topic}}» тақырыбын түсіндір",
     "hintPrompt": "Тапсырмаға кеңес бер",
+    "notUnderstoodPrompt": "«{{topic}}» тақырыбын түсінбедім, қарапайымырақ түсіндір",
     "actions": {
       "explain": "Тақырыпты түсіндір",
       "hint": "Кеңес",
+      "notUnderstood": "Түсінбедім",
       "task": "Тапсырма бер"
     },
     "agents": {

@@ -31,8 +31,6 @@ function currentLanguage(): Language {
   return lang === 'kk' || lang === 'en' ? lang : 'ru'
 }
 
-// ---------- auth and users ----------
-
 function toUser(user: MockUser): User {
   const { id, email, name, language, role } = user
   return { id, email, name, language, role, plan: state.plan }
@@ -105,8 +103,6 @@ export const mockAuth = {
   },
 }
 
-// ---------- courses ----------
-
 export const mockCourses = {
   list: (): Promise<Course[]> => delay([COURSE]),
   topics(courseId: number): Promise<Topic[]> {
@@ -114,8 +110,6 @@ export const mockCourses = {
     return delay(TOPICS)
   },
 }
-
-// ---------- chat ----------
 
 function findSession(sessionId: number) {
   const session = state.sessions.find((s) => s.id === sessionId)
@@ -203,8 +197,6 @@ export const mockChat = {
   },
 }
 
-// ---------- items ----------
-
 const WRITE_STATEMENT = /\b(insert|update|delete|drop|alter|create|replace|truncate|attach|pragma)\b/i
 
 // Lowercase, single spaces, no spaces around punctuation, no trailing semicolon.
@@ -261,8 +253,6 @@ export const mockItems = {
     return delay({ ...base, correct: false, score: 0, feedback_code: 'wrong_result', error: null }, 500)
   },
 }
-
-// ---------- billing ----------
 
 function subscription(): Subscription {
   const premium = state.plan === 'premium'
