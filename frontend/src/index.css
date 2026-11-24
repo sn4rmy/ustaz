@@ -2,50 +2,58 @@
 
 /* Design tokens, described in docs/design.md. Components use only these names. */
 :root {
-  --bg: #f6f7f9;
+  --bg: #f5f3ee;
   --surface: #ffffff;
-  --surface-muted: #eef1f5;
-  --border: #dde2e9;
-  --text: #18212f;
-  --muted: #5b6676;
-  --primary: #2864d0;
-  --primary-hover: #1f50ab;
+  --surface-muted: #eeebe4;
+  --border: #dfdbd1;
+  --text: #15161b;
+  --muted: #5a5d66;
+  --primary: #4338ca;
+  --primary-hover: #3730a3;
   --primary-fg: #ffffff;
-  --primary-soft: #e6eefc;
-  --success: #157644;
-  --success-soft: #e4f5eb;
-  --danger: #c2352b;
-  --danger-soft: #fdeceb;
-  --warning: #8a5a00;
-  --warning-soft: #fff4dc;
+  --primary-soft: #e9e8fc;
+  --success: #137343;
+  --success-soft: #e3f4e9;
+  --danger: #bf342a;
+  --danger-soft: #fcebe9;
+  --warning: #865600;
+  --warning-soft: #fdf1d6;
+  --card-shadow: 0 1px 2px rgb(21 22 27 / 0.04), 0 4px 16px -4px rgb(21 22 27 / 0.08);
+  --pop-shadow: 0 2px 4px rgb(21 22 27 / 0.06), 0 16px 40px -12px rgb(21 22 27 / 0.18);
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0f141b;
-    --surface: #171e27;
-    --surface-muted: #1f2833;
-    --border: #2c3744;
-    --text: #e7ebf0;
-    --muted: #97a3b3;
-    --primary: #5b8ff0;
-    --primary-hover: #7aa5f4;
-    --primary-fg: #0b1220;
-    --primary-soft: #1c2a42;
+    --bg: #0c0d12;
+    --surface: #15171e;
+    --surface-muted: #1f212b;
+    --border: #2b2e3a;
+    --text: #ecedf2;
+    --muted: #9b9eab;
+    --primary: #8f91ff;
+    --primary-hover: #a9abff;
+    --primary-fg: #0c0d1a;
+    --primary-soft: #23244b;
     --success: #4cc283;
-    --success-soft: #133024;
-    --danger: #f0776d;
-    --danger-soft: #3a1b19;
+    --success-soft: #12301f;
+    --danger: #f27a70;
+    --danger-soft: #3a1c1a;
     --warning: #f0c25a;
     --warning-soft: #33290f;
+    --card-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 16px -4px rgb(0 0 0 / 0.4);
+    --pop-shadow: 0 2px 4px rgb(0 0 0 / 0.3), 0 16px 40px -12px rgb(0 0 0 / 0.6);
     color-scheme: dark;
   }
 }
 
 @theme inline {
-  --font-sans: 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-sans: 'Inter Variable', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Geologica Variable', 'Inter Variable', 'Segoe UI', Arial, sans-serif;
   --font-mono: 'JetBrains Mono', 'Cascadia Code', Consolas, 'Liberation Mono', monospace;
+
+  --shadow-card: var(--card-shadow);
+  --shadow-pop: var(--pop-shadow);
 
   --color-bg: var(--bg);
   --color-surface: var(--surface);
@@ -72,4 +80,18 @@ body {
   color: var(--text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--primary-soft);
+  color: var(--text);
+}
+
+/* Faint grid behind the auth screens; purely decorative. */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, var(--border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
 }
