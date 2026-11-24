@@ -37,6 +37,8 @@ src/
   i18n/         i18next setup, locales/{kk,ru,en}.json, error code texts
   components/   layout, language switcher, base UI elements
   pages/        one file per screen
+  landing/      scenes of the public home page, one file per scene
+  motion/       GSAP setup, shared timing, smooth scroll for the home page
 ```
 
 Rules:
