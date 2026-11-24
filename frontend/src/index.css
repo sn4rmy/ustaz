@@ -1,5 +1,9 @@
 @import 'tailwindcss';
 
+/* Styles that apply only while a landing scene animates, e.g. animated:absolute.
+   The scene adds .scene-animated itself, so with reduced motion the plain layout stays. */
+@custom-variant animated (&:where(.scene-animated, .scene-animated *));
+
 /* Design tokens, described in docs/design.md. Components use only these names. */
 :root {
   --bg: #f5f3ee;
