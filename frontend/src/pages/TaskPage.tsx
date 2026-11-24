@@ -97,7 +97,7 @@ function TaskSession({ sessionId }: { sessionId: number }) {
         <Card className="flex flex-col gap-4">
           <div>
             <div className="flex items-center justify-between gap-2">
-              <h1 className="text-lg font-semibold">{t('pages.task')}</h1>
+              <h1 className="font-display tracking-tight text-lg font-semibold">{t('pages.task')}</h1>
               <span className="text-xs text-muted">
                 {t('task.difficulty', { level: current.difficulty })}
               </span>

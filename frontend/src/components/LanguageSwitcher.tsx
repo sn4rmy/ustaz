@@ -19,7 +19,7 @@ export function LanguageSwitcher({ onChange }: Props) {
     <div
       role="group"
       aria-label={t('nav.language')}
-      className="inline-flex rounded-lg border border-border bg-surface p-0.5"
+      className="inline-flex rounded-full border border-border bg-surface p-0.5"
     >
       {LANGUAGES.map((language) => {
         const active = i18n.language === language
@@ -29,7 +29,7 @@ export function LanguageSwitcher({ onChange }: Props) {
             type="button"
             aria-pressed={active}
             onClick={() => select(language)}
-            className={`min-h-8 rounded-md px-2.5 text-xs font-semibold uppercase transition-colors ${
+            className={`min-h-8 rounded-full px-2.5 text-xs font-semibold uppercase transition-colors ${
               active ? 'bg-primary text-primary-fg' : 'text-muted hover:text-text'
             }`}
           >

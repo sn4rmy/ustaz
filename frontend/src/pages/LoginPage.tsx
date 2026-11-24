@@ -42,7 +42,7 @@ export function LoginPage() {
 
   return (
     <Card className="w-full max-w-sm">
-      <h1 className="text-2xl font-semibold">{t('auth.loginTitle')}</h1>
+      <h1 className="font-display tracking-tight text-2xl font-semibold">{t('auth.loginTitle')}</h1>
       <p className="mt-1 text-sm text-muted">{t('app.tagline')}</p>
       <form className="mt-6 flex flex-col gap-4" onSubmit={submit} noValidate>
         {error && <Alert>{error}</Alert>}

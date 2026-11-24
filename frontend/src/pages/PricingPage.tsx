@@ -146,7 +146,7 @@ export function PricingPage() {
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-semibold">{t('pricing.title')}</h1>
+        <h1 className="font-display tracking-tight text-2xl font-semibold">{t('pricing.title')}</h1>
         <p className="mt-1 text-muted">{t('pricing.subtitle')}</p>
       </div>
 

@@ -1,3 +1,5 @@
+import '@fontsource-variable/inter'
+import '@fontsource-variable/geologica'
 import './index.css'
 import './i18n'
 
