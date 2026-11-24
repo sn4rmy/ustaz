@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useAuth } from '../auth/context'
 import { ButtonAnchor, ButtonLink } from '../components/ui'
-import { gsap, SplitText, useGSAP } from '../motion/gsap'
+import { gsap, SplitText, useGSAP } from '../motion/scroll'
 import { DURATION, EASE, MEDIA } from '../motion/tokens'
 import { DotGrid } from './DotGrid'
 import { SectionLabel } from './SectionLabel'

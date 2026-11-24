@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { gsap, useGSAP } from '../motion/gsap'
+import { gsap, useGSAP } from '../motion/scroll'
 import { markAnimated } from '../motion/scene'
 import { MEDIA } from '../motion/tokens'
 import { AgentsList } from './AgentsList'

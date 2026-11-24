@@ -4,8 +4,10 @@ import { Link, NavLink, Outlet } from 'react-router'
 import { isMocked } from '../api/config'
 import type { Language, Plan } from '../api/types'
 import { useAuth } from '../auth/context'
-import { Badge, Button } from './ui'
+import { AuthPromo } from './AuthPromo'
 import { LanguageSwitcher } from './LanguageSwitcher'
+import { PageTransition } from './PageTransition'
+import { Badge, Button } from './ui'
 
 const anyMocks = (['auth', 'courses', 'chat', 'items', 'billing'] as const).some(isMocked)
 
@@ -77,7 +79,9 @@ export function Layout() {
         </div>
       </header>
       <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-6">
-        <Outlet />
+        <PageTransition className="flex flex-1 flex-col">
+          <Outlet />
+        </PageTransition>
       </main>
     </div>
   )
@@ -91,8 +95,11 @@ export function AuthLayout() {
         <Logo />
         <LanguageSwitcher />
       </header>
-      <main className="flex flex-1 items-start justify-center px-4 py-8 sm:items-center">
-        <Outlet />
+      <main className="mx-auto grid w-full max-w-6xl flex-1 items-start gap-10 px-4 py-8 sm:items-center lg:grid-cols-2">
+        <AuthPromo />
+        <PageTransition className="flex justify-center">
+          <Outlet />
+        </PageTransition>
       </main>
     </div>
   )

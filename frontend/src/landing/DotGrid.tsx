@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 
-import { gsap, ScrollTrigger, useGSAP } from '../motion/gsap'
+import { gsap, ScrollTrigger, useGSAP } from '../motion/scroll'
 import { MEDIA } from '../motion/tokens'
 
 const CELL = 32

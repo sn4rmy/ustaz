@@ -7,7 +7,7 @@ import type { Plan, PlanInfo } from '../api/types'
 import { useAuth } from '../auth/context'
 import { formatPrice } from '../billing/format'
 import { ButtonLink } from '../components/ui'
-import { gsap, useGSAP } from '../motion/gsap'
+import { gsap, useGSAP } from '../motion/scroll'
 import { DURATION, EASE, MEDIA } from '../motion/tokens'
 import { SectionLabel } from './SectionLabel'
 

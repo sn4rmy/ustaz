@@ -3,6 +3,7 @@ export const DURATION = {
   fast: 0.2,
   base: 0.45,
   slow: 0.9,
+  page: 0.25,
 }
 
 export const EASE = {

@@ -3,7 +3,7 @@ import 'lenis/dist/lenis.css'
 import Lenis from 'lenis'
 import { useEffect } from 'react'
 
-import { gsap, ScrollTrigger } from './gsap'
+import { gsap, ScrollTrigger } from './scroll'
 import { prefersReducedMotion } from './tokens'
 
 // Smooth scrolling for the landing page only. Wiring follows the Lenis README:
