@@ -10,17 +10,17 @@ import { LanguageSwitcher } from './LanguageSwitcher'
 const anyMocks = (['auth', 'courses', 'chat', 'items', 'billing'] as const).some(isMocked)
 
 function navClass({ isActive }: { isActive: boolean }) {
-  return `rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-    isActive ? 'bg-primary-soft text-primary' : 'text-muted hover:text-text'
+  return `rounded-full px-3.5 py-2 text-sm font-medium transition-colors ${
+    isActive ? 'bg-primary-soft text-primary' : 'text-muted hover:bg-surface-muted hover:text-text'
   }`
 }
 
 export function Logo() {
   const { t } = useTranslation()
   return (
-    <Link to="/" className="flex items-center gap-2 font-bold text-text">
+    <Link to="/" className="flex items-center gap-2 text-text">
       <img src="/favicon.svg" alt="" className="size-7" />
-      <span className="text-lg">{t('app.name')}</span>
+      <span className="font-display text-lg font-semibold tracking-tight">{t('app.name')}</span>
     </Link>
   )
 }
@@ -42,8 +42,8 @@ export function Layout() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-10 border-b border-border bg-surface/95 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-2">
+      <header className="sticky top-0 z-10 border-b border-border/70 bg-bg/80 backdrop-blur-md">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-4 gap-y-2 px-4 py-2.5">
           <Logo />
           {anyMocks && (
             <span className="hidden sm:inline-flex">
@@ -85,7 +85,8 @@ export function Layout() {
 
 export function AuthLayout() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="relative isolate flex min-h-screen flex-col">
+      <div aria-hidden="true" className="bg-grid absolute inset-0 -z-10" />
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3">
         <Logo />
         <LanguageSwitcher />

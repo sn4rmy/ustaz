@@ -49,7 +49,7 @@ export function ChatStartPage() {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
       <div>
-        <h1 className="text-2xl font-semibold">{t('chat.startTitle')}</h1>
+        <h1 className="font-display tracking-tight text-2xl font-semibold">{t('chat.startTitle')}</h1>
         <p className="mt-1 text-muted">{t('chat.startText')}</p>
       </div>
 

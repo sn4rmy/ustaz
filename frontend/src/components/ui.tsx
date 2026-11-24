@@ -6,8 +6,8 @@ import { useId } from 'react'
 type ButtonVariant = 'primary' | 'secondary' | 'ghost'
 
 const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
-  primary: 'bg-primary text-primary-fg hover:bg-primary-hover',
-  secondary: 'border border-border bg-surface text-text hover:bg-surface-muted',
+  primary: 'bg-primary text-primary-fg shadow-card hover:bg-primary-hover hover:shadow-pop',
+  secondary: 'border border-border bg-surface text-text hover:border-text/30 hover:bg-surface-muted',
   ghost: 'text-muted hover:bg-surface-muted hover:text-text',
 }
 
@@ -29,7 +29,7 @@ export function Button({
     <button
       type={type}
       disabled={disabled || loading}
-      className={`inline-flex min-h-10 items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-50 ${BUTTON_VARIANTS[variant]} ${className}`}
+      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-semibold transition-[background-color,border-color,box-shadow,color] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-50 ${BUTTON_VARIANTS[variant]} ${className}`}
       {...props}
     >
       {loading && <Spinner small />}
@@ -60,17 +60,17 @@ export function Loading({ label }: { label: string }) {
 type AlertTone = 'error' | 'info' | 'success' | 'warning'
 
 const ALERT_TONES: Record<AlertTone, string> = {
-  error: 'bg-danger-soft text-danger',
-  info: 'bg-primary-soft text-primary',
-  success: 'bg-success-soft text-success',
-  warning: 'bg-warning-soft text-warning',
+  error: 'border-danger/25 bg-danger-soft text-danger',
+  info: 'border-primary/25 bg-primary-soft text-primary',
+  success: 'border-success/25 bg-success-soft text-success',
+  warning: 'border-warning/25 bg-warning-soft text-warning',
 }
 
 export function Alert({ tone = 'error', children }: { tone?: AlertTone; children: ReactNode }) {
   return (
     <div
       role={tone === 'error' ? 'alert' : 'status'}
-      className={`rounded-lg px-4 py-3 text-sm ${ALERT_TONES[tone]}`}
+      className={`rounded-xl border px-4 py-3 text-sm ${ALERT_TONES[tone]}`}
     >
       {children}
     </div>
@@ -79,7 +79,7 @@ export function Alert({ tone = 'error', children }: { tone?: AlertTone; children
 
 export function Card({ className = '', children }: { className?: string; children: ReactNode }) {
   return (
-    <div className={`rounded-xl border border-border bg-surface p-5 shadow-sm ${className}`}>
+    <div className={`rounded-[20px] border border-border bg-surface p-5 shadow-card sm:p-6 ${className}`}>
       {children}
     </div>
   )
@@ -102,7 +102,7 @@ export function Field({ label, error, className = '', ...props }: FieldProps) {
         id={id}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? errorId : undefined}
-        className="min-h-10 rounded-lg border border-border bg-surface px-3 py-2 text-base outline-none focus:border-primary focus:ring-2 focus:ring-primary/25 aria-invalid:border-danger"
+        className="min-h-11 rounded-xl border border-border bg-surface px-3.5 py-2 text-base transition-shadow outline-none focus:border-primary focus:ring-4 focus:ring-primary/20 aria-invalid:border-danger"
         {...props}
       />
       {error && (
@@ -127,7 +127,7 @@ export function SelectField({ label, className = '', children, ...props }: Selec
       </label>
       <select
         id={id}
-        className="min-h-10 rounded-lg border border-border bg-surface px-3 py-2 text-base outline-none focus:border-primary focus:ring-2 focus:ring-primary/25"
+        className="min-h-11 rounded-xl border border-border bg-surface px-3.5 py-2 text-base transition-shadow outline-none focus:border-primary focus:ring-4 focus:ring-primary/20"
         {...props}
       >
         {children}
@@ -139,7 +139,7 @@ export function SelectField({ label, className = '', children, ...props }: Selec
 export function Badge({ className = '', children }: { className?: string; children: ReactNode }) {
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${className}`}
+      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${className}`}
     >
       {children}
     </span>
