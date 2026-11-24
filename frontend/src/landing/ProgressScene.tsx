@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Badge } from '../components/ui'
-import { gsap, useGSAP } from '../motion/gsap'
+import { gsap, useGSAP } from '../motion/scroll'
 import { MEDIA } from '../motion/tokens'
 import { SectionLabel } from './SectionLabel'
 

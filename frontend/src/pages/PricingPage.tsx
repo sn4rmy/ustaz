@@ -10,6 +10,8 @@ import { PlanBadge } from '../components/Layout'
 import { Alert, Button, Card, Loading } from '../components/ui'
 import { isLanguage } from '../i18n'
 import { errorText } from '../i18n/errors'
+import { gsap, useGSAP } from '../motion/gsap'
+import { EASE, MEDIA } from '../motion/tokens'
 
 // After payment the webhook updates the plan with a delay, so the page polls for it.
 const POLL_INTERVAL_MS = 2000
@@ -147,7 +149,7 @@ export function PricingPage() {
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-6">
       <div>
-        <h1 className="font-display tracking-tight text-2xl font-semibold">{t('pricing.title')}</h1>
+        <h1 className="font-display text-3xl font-bold tracking-tight">{t('pricing.title')}</h1>
         <p className="mt-1 text-muted">{t('pricing.subtitle')}</p>
       </div>
 
@@ -189,18 +191,24 @@ function PlanCard({
   const { t, i18n } = useTranslation()
   const features = t(`pricing.features.${plan.code}`, { returnObjects: true }) as string[]
   return (
-    <Card className={`flex flex-col gap-4 ${current ? 'ring-2 ring-primary' : ''}`}>
+    <Card
+      className={`flex flex-col gap-4 ${current ? 'ring-2 ring-primary' : ''} ${
+        plan.code === 'premium' ? 'shadow-pop' : ''
+      }`}
+    >
       <h2 className="text-lg font-semibold">{t(`plans.${plan.code}`)}</h2>
       <p>
         {plan.price ? (
           <>
-            <span className="text-3xl font-bold">{formatPrice(plan.price, i18n.language)}</span>{' '}
+            <span className="font-display text-4xl font-bold">
+              {formatPrice(plan.price, i18n.language)}
+            </span>{' '}
             <span className="text-muted">
               / {t(`pricing.interval.${plan.price.interval}`, plan.price.interval)}
             </span>
           </>
         ) : (
-          <span className="text-3xl font-bold">{t('pricing.free')}</span>
+          <span className="font-display text-4xl font-bold">{t('pricing.free')}</span>
         )}
       </p>
       <p className="text-sm font-medium">
@@ -212,7 +220,10 @@ function PlanCard({
         {Array.isArray(features) &&
           features.map((feature) => (
             <li key={feature} className="flex gap-2">
-              <span aria-hidden="true" className="text-success">
+              <span
+                aria-hidden="true"
+                className="grid size-5 shrink-0 place-items-center rounded-full bg-success-soft text-xs text-success"
+              >
                 ✓
               </span>
               {feature}
@@ -220,7 +231,7 @@ function PlanCard({
           ))}
       </ul>
       {current ? (
-        <p className="rounded-lg bg-surface-muted py-2 text-center text-sm font-medium text-muted">
+        <p className="rounded-full bg-surface-muted py-2.5 text-center text-sm font-medium text-muted">
           {t('pricing.currentPlan')}
         </p>
       ) : (
@@ -232,9 +243,22 @@ function PlanCard({
 
 function CurrentPlan({ subscription }: { subscription: Subscription }) {
   const { t, i18n } = useTranslation()
+  const bar = useRef<HTMLDivElement>(null)
   const limit = subscription.daily_message_limit
   const used = subscription.messages_used_today
   const percent = limit ? Math.min(100, Math.round((used / limit) * 100)) : 0
+
+  // The bar fills from zero to the used share when the page opens or the number changes.
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia()
+      mm.add(MEDIA.motion, () => {
+        gsap.from(bar.current, { scaleX: 0, duration: 0.9, ease: EASE.out })
+      })
+      return () => mm.revert()
+    },
+    { dependencies: [percent], revertOnUpdate: true },
+  )
   const periodEnd = subscription.current_period_end
     ? new Intl.DateTimeFormat(i18n.language, { dateStyle: 'long' }).format(
         new Date(subscription.current_period_end),
@@ -266,10 +290,11 @@ function CurrentPlan({ subscription }: { subscription: Subscription }) {
             aria-valuemax={limit}
             aria-valuenow={used}
             aria-label={t('pricing.usedToday')}
-            className="mt-2 h-2 overflow-hidden rounded-full bg-surface-muted"
+            className="mt-2 h-2.5 overflow-hidden rounded-full bg-surface-muted"
           >
             <div
-              className={`h-full rounded-full ${percent >= 100 ? 'bg-danger' : 'bg-primary'}`}
+              ref={bar}
+              className={`h-full origin-left rounded-full ${percent >= 100 ? 'bg-danger' : 'bg-primary'}`}
               style={{ width: `${percent}%` }}
             />
           </div>

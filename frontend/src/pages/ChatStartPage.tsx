@@ -49,13 +49,13 @@ export function ChatStartPage() {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
       <div>
-        <h1 className="font-display tracking-tight text-2xl font-semibold">{t('chat.startTitle')}</h1>
+        <h1 className="font-display text-3xl font-bold tracking-tight">{t('chat.startTitle')}</h1>
         <p className="mt-1 text-muted">{t('chat.startText')}</p>
       </div>
 
       {lastSessionId !== null && (
-        <Card className="flex flex-wrap items-center justify-between gap-3">
-          <span>{t('chat.continueText')}</span>
+        <Card className="flex flex-wrap items-center justify-between gap-3 border-primary/30 bg-primary-soft">
+          <span className="font-medium text-primary">{t('chat.continueText')}</span>
           <Button variant="secondary" onClick={() => navigate(`/chat/${lastSessionId}`)}>
             {t('chat.continue')}
           </Button>
@@ -84,12 +84,20 @@ export function ChatStartPage() {
       {courses?.length === 0 && <Alert tone="info">{t('chat.noCourses')}</Alert>}
 
       {courses?.map((course) => (
-        <Card key={course.id} className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h2 className="font-semibold">{course.title}</h2>
-            <p className="text-sm text-muted">
-              {t('chat.courseLanguage', { language: t(`languages.${course.language}`) })}
-            </p>
+        <Card key={course.id} className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <span
+              aria-hidden="true"
+              className="grid size-12 shrink-0 place-items-center rounded-2xl bg-primary-soft font-mono text-sm font-semibold text-primary"
+            >
+              SQL
+            </span>
+            <div>
+              <h2 className="text-lg font-semibold">{course.title}</h2>
+              <p className="text-sm text-muted">
+                {t('chat.courseLanguage', { language: t(`languages.${course.language}`) })}
+              </p>
+            </div>
           </div>
           <Button loading={starting === course.id} onClick={() => void start(course)}>
             {t('chat.newSession')}

@@ -9,7 +9,7 @@ import { PricingCta } from '../landing/PricingCta'
 import { ProgressScene } from '../landing/ProgressScene'
 import { SandboxScene } from '../landing/SandboxScene'
 import { TopicsScene } from '../landing/TopicsScene'
-import { ScrollTrigger } from '../motion/gsap'
+import { ScrollTrigger } from '../motion/scroll'
 import { useLenis } from '../motion/useLenis'
 
 // Public home page. Scenes go top to bottom in the order their ScrollTriggers must be

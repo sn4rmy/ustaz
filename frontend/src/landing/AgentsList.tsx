@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { gsap, useGSAP } from '../motion/gsap'
+import { gsap, useGSAP } from '../motion/scroll'
 import { DURATION, EASE, MEDIA } from '../motion/tokens'
 
 const STEPS = ['orchestrator', 'teacher', 'examiner', 'mentor'] as const

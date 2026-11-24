@@ -7,8 +7,10 @@ import { ApiError } from '../api/client'
 import type { Message, MessageAction, SendMessageRequest, Topic } from '../api/types'
 import { MessageBubble } from '../chat/MessageBubble'
 import { chatStorage } from '../chat/storage'
-import { Alert, Button, Loading, SelectField, Spinner } from '../components/ui'
+import { TypingDots } from '../chat/TypingDots'
+import { Alert, Button, Loading, SelectField } from '../components/ui'
 import { errorText } from '../i18n/errors'
+import { prefersReducedMotion } from '../motion/tokens'
 
 export interface ChatLocationState {
   // Set by the task page: ask the Teacher for a hint on this topic right away.
@@ -37,7 +39,9 @@ function ChatSession({ sessionId }: { sessionId: number }) {
   const [loadingTask, setLoadingTask] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [limitReached, setLimitReached] = useState(false)
-  const bottomRef = useRef<HTMLDivElement>(null)
+  // Messages after this index arrived during the visit and fade in; history does not.
+  const [historyCount, setHistoryCount] = useState(0)
+  const listRef = useRef<HTMLDivElement>(null)
   const hintHandled = useRef(false)
 
   useEffect(() => {
@@ -55,6 +59,7 @@ function ChatSession({ sessionId }: { sessionId: number }) {
         // Remember it as the last session, e.g. when it was opened by a link.
         if (!stored) chatStorage.saveSession(sessionId, {})
         setMessages(history)
+        setHistoryCount(history.length)
         setTopics([...courseTopics].sort((a, b) => a.position - b.position))
       } catch (err) {
         if (!cancelled) {
@@ -71,8 +76,11 @@ function ChatSession({ sessionId }: { sessionId: number }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionId, t])
 
+  // The message list scrolls inside itself, so only the list is moved to the bottom.
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+    const list = listRef.current
+    if (!list) return
+    list.scrollTo({ top: list.scrollHeight, behavior: prefersReducedMotion() ? 'auto' : 'smooth' })
   }, [messages, sending])
 
   function selectTopic(id: number | undefined) {
@@ -155,8 +163,8 @@ function ChatSession({ sessionId }: { sessionId: number }) {
   const topicTitle = topics.find((topic) => topic.id === topicId)?.title
 
   return (
-    <div className="flex flex-1 flex-col gap-4 lg:flex-row">
-      <aside className="lg:w-64 lg:shrink-0">
+    <div className="flex h-[calc(100svh-10.5rem)] min-h-[26rem] flex-col gap-4 sm:h-[calc(100svh-8rem)] lg:flex-row">
+      <aside className="lg:w-64 lg:shrink-0 lg:overflow-y-auto">
         <div className="lg:hidden">
           <SelectField
             label={t('chat.topic')}
@@ -182,13 +190,20 @@ function ChatSession({ sessionId }: { sessionId: number }) {
                   type="button"
                   onClick={() => selectTopic(topic.id === topicId ? undefined : topic.id)}
                   aria-pressed={topic.id === topicId}
-                  className={`w-full rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+                  className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition-colors ${
                     topic.id === topicId
                       ? 'bg-primary-soft font-medium text-primary'
                       : 'text-text hover:bg-surface-muted'
                   }`}
                 >
-                  <span className="text-muted">{topic.position}.</span> {topic.title}
+                  <span
+                    className={`grid size-6 shrink-0 place-items-center rounded-full font-mono text-xs ${
+                      topic.id === topicId ? 'bg-primary text-primary-fg' : 'bg-surface-muted text-muted'
+                    }`}
+                  >
+                    {topic.position}
+                  </span>
+                  {topic.title}
                 </button>
               </li>
             ))}
@@ -196,25 +211,22 @@ function ChatSession({ sessionId }: { sessionId: number }) {
         </nav>
       </aside>
 
-      <section className="flex min-h-[60vh] flex-1 flex-col rounded-xl border border-border bg-surface">
-        <div className="flex-1 space-y-4 overflow-y-auto p-4">
+      <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-[20px] border border-border bg-bg shadow-card">
+        <div ref={listRef} className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4 sm:p-5">
           {messages === null && <Loading label={t('common.loading')} />}
           {messages?.length === 0 && (
-            <div className="py-10 text-center text-muted">
-              <p className="font-medium text-text">{t('chat.emptyTitle')}</p>
-              <p className="mt-1 text-sm">{t('chat.emptyText')}</p>
+            <div className="py-16 text-center text-muted">
+              <p className="font-display text-xl font-semibold text-text">{t('chat.emptyTitle')}</p>
+              <p className="mt-2 text-sm">{t('chat.emptyText')}</p>
             </div>
           )}
-          {messages?.map((message) => <MessageBubble key={message.id} message={message} />)}
-          {sending && (
-            <div role="status" className="flex items-center gap-2 text-sm text-muted">
-              <Spinner small /> {t('chat.thinking')}
-            </div>
-          )}
-          <div ref={bottomRef} />
+          {messages?.map((message, index) => (
+            <MessageBubble key={message.id} message={message} appear={index >= historyCount} />
+          ))}
+          {sending && <TypingDots label={t('chat.thinking')} />}
         </div>
 
-        <div className="space-y-3 border-t border-border p-3">
+        <div className="space-y-3 border-t border-border bg-surface p-3 sm:p-4">
           {limitReached && (
             <Alert tone="warning">
               {t('errors.daily_limit_reached')}{' '}
@@ -225,9 +237,12 @@ function ChatSession({ sessionId }: { sessionId: number }) {
           )}
           {error && <Alert>{error}</Alert>}
 
-          <div className="flex flex-wrap gap-2">
+          {topicId === undefined && <p className="text-xs text-muted">{t('chat.pickTopic')}</p>}
+          {/* One swipeable row on phones, so the message list keeps its height. */}
+          <div className="-mx-3 flex gap-2 overflow-x-auto px-3 sm:mx-0 sm:flex-wrap sm:px-0">
             <Button
               variant="secondary"
+              className="min-h-9 shrink-0 px-3.5 text-xs"
               disabled={topicId === undefined || sending}
               onClick={() =>
                 void send(t('chat.explainPrompt', { topic: topicTitle ?? '' }), 'explain')
@@ -237,6 +252,7 @@ function ChatSession({ sessionId }: { sessionId: number }) {
             </Button>
             <Button
               variant="secondary"
+              className="min-h-9 shrink-0 px-3.5 text-xs"
               disabled={topicId === undefined || sending}
               onClick={() => void send(t('chat.hintPrompt'), 'hint')}
             >
@@ -244,6 +260,7 @@ function ChatSession({ sessionId }: { sessionId: number }) {
             </Button>
             <Button
               variant="secondary"
+              className="min-h-9 shrink-0 px-3.5 text-xs"
               disabled={topicId === undefined || sending}
               onClick={() =>
                 void send(t('chat.notUnderstoodPrompt', { topic: topicTitle ?? '' }), 'explain')
@@ -253,18 +270,19 @@ function ChatSession({ sessionId }: { sessionId: number }) {
             </Button>
             <Button
               variant="secondary"
+              className="min-h-9 shrink-0 px-3.5 text-xs"
               disabled={topicId === undefined}
               loading={loadingTask}
               onClick={() => void openTask()}
             >
               {t('chat.actions.task')}
             </Button>
-            {topicId === undefined && (
-              <span className="self-center text-xs text-muted">{t('chat.pickTopic')}</span>
-            )}
           </div>
 
-          <form className="flex items-end gap-2" onSubmit={submit}>
+          <form
+            className="flex items-end gap-2 rounded-2xl border border-border bg-bg p-1.5 transition-shadow focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/20"
+            onSubmit={submit}
+          >
             <label htmlFor="chat-input" className="sr-only">
               {t('chat.inputLabel')}
             </label>
@@ -275,7 +293,7 @@ function ChatSession({ sessionId }: { sessionId: number }) {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={onKeyDown}
               placeholder={t('chat.placeholder')}
-              className="max-h-40 min-h-12 flex-1 resize-y rounded-lg border border-border bg-surface px-3 py-2 text-base outline-none focus:border-primary focus:ring-2 focus:ring-primary/25"
+              className="max-h-40 min-h-11 flex-1 resize-none bg-transparent px-2.5 py-2 text-base outline-none"
             />
             <Button type="submit" disabled={!input.trim() || sending}>
               {t('chat.send')}

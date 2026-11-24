@@ -10,7 +10,7 @@ export function SchemaView({ schema }: { schema: TableSchema[] }) {
       <p className="mb-2 text-sm font-medium">{t('task.schema')}</p>
       <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
         {schema.map((table) => (
-          <div key={table.table} className="rounded-lg border border-border">
+          <div key={table.table} className="overflow-hidden rounded-xl border border-border">
             <p className="border-b border-border bg-surface-muted px-3 py-1.5 font-mono text-sm font-semibold">
               {table.table}
             </p>
@@ -44,7 +44,7 @@ export function ResultTable({ columns, rows }: { columns: string[]; rows: Cell[]
       <p className="mb-2 text-sm font-medium">
         {t('task.result', { count: rows.length })}
       </p>
-      <div className="max-h-80 overflow-auto rounded-lg border border-border">
+      <div className="max-h-80 overflow-auto rounded-xl border border-border">
         <table className="w-full border-collapse font-mono text-sm">
           <thead className="sticky top-0 bg-surface-muted">
             <tr>
