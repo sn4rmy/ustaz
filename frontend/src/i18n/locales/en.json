@@ -161,5 +161,100 @@
     "paymentError": "The payment didn't go through. Try again or use another card.",
     "paddleUnavailable": "Couldn't load the payment page. Check your connection and turn off the ad blocker.",
     "note": "Payments are processed by Paddle. Card details never reach our server."
+  },
+  "landing": {
+    "nav": {
+      "login": "Sign in",
+      "openChat": "Open chat",
+      "home": "Home"
+    },
+    "hero": {
+      "label": "A learning assistant for SQL",
+      "title": "Learn SQL with three AI agents",
+      "text": "The Teacher explains topics from your course materials, the Examiner gives tasks and checks queries on a real database, and the Mentor tracks your progress and suggests what to do next.",
+      "start": "Get started",
+      "how": "How it works"
+    },
+    "agents": {
+      "label": "Three agents",
+      "title": "One question, three roles",
+      "question": "Student question",
+      "questionText": "How is WHERE different from HAVING?",
+      "orchestrator": "Orchestrator",
+      "roles": {
+        "orchestrator": "picks an agent",
+        "teacher": "explains",
+        "examiner": "checks",
+        "mentor": "guides"
+      },
+      "steps": {
+        "orchestrator": "Every message goes to the orchestrator first. It looks at the question and the session state and decides which agent is needed.",
+        "teacher": "Explains the topic from the course notes and shows which material the answer comes from.",
+        "examiner": "Gives an SQL task and runs the query in a sandbox: the result is compared with a reference, not guessed by the model.",
+        "mentor": "Keeps a model of what the student knows and decides what comes next: review the topic, give a hint or move on."
+      }
+    },
+    "sandbox": {
+      "label": "SQL sandbox",
+      "title": "The database checks your query, not a guess",
+      "text": "Your SQL runs on the course database in an isolated sandbox, and the result is compared with a reference.",
+      "task": "List each student name with every grade they have.",
+      "run": "Running",
+      "rows": "Rows in result: {{count}}",
+      "correct": "Correct"
+    },
+    "topics": {
+      "label": "Five course topics",
+      "title": "From your first SELECT to subqueries",
+      "items": [
+        {
+          "title": "SELECT and WHERE",
+          "text": "Pick the columns you need and keep the rows that match a condition."
+        },
+        {
+          "title": "Sorting and LIMIT",
+          "text": "Order the result and take only the first rows."
+        },
+        {
+          "title": "Aggregates and GROUP BY",
+          "text": "Count, sum and average values for each group."
+        },
+        {
+          "title": "JOIN",
+          "text": "Combine rows of two tables by a shared column."
+        },
+        {
+          "title": "Subqueries",
+          "text": "Use the result of one query inside another."
+        }
+      ]
+    },
+    "progress": {
+      "label": "Progress by topic",
+      "title": "See what you have mastered",
+      "text": "The Mentor estimates how well you know each topic and shows it on a scale.",
+      "soon": "Soon",
+      "example": "Example"
+    },
+    "pricing": {
+      "label": "Pricing",
+      "title": "Start for free",
+      "text": "Free is for trying it out. Premium removes the daily message limit."
+    },
+    "cta": {
+      "title": "Ready to write your first query?",
+      "text": "Signing up takes a minute.",
+      "start": "Get started"
+    },
+    "footer": {
+      "about": "A team project for the course and the practical part of our diploma work.",
+      "team": "Team",
+      "roles": {
+        "lead": "Team Lead, Backend, ML/AI",
+        "frontend": "Frontend",
+        "devops": "DevOps/QA, Payments"
+      },
+      "github": "Code on GitHub"
+    }
   }
 }

@@ -1,5 +1,12 @@
-import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode, SelectHTMLAttributes } from 'react'
+import type {
+  AnchorHTMLAttributes,
+  ButtonHTMLAttributes,
+  InputHTMLAttributes,
+  ReactNode,
+  SelectHTMLAttributes,
+} from 'react'
 import { useId } from 'react'
+import { Link, type LinkProps } from 'react-router'
 
 // Base elements from docs/design.md. Pages build on these instead of raw Tailwind classes.
 
@@ -9,6 +16,10 @@ const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
   primary: 'bg-primary text-primary-fg shadow-card hover:bg-primary-hover hover:shadow-pop',
   secondary: 'border border-border bg-surface text-text hover:border-text/30 hover:bg-surface-muted',
   ghost: 'text-muted hover:bg-surface-muted hover:text-text',
+}
+
+function buttonClass(variant: ButtonVariant, className: string): string {
+  return `inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-semibold transition-[background-color,border-color,box-shadow,color] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-50 ${BUTTON_VARIANTS[variant]} ${className}`
 }
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -29,13 +40,31 @@ export function Button({
     <button
       type={type}
       disabled={disabled || loading}
-      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-semibold transition-[background-color,border-color,box-shadow,color] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-50 ${BUTTON_VARIANTS[variant]} ${className}`}
+      className={buttonClass(variant, className)}
       {...props}
     >
       {loading && <Spinner small />}
       {children}
     </button>
   )
+}
+
+// A link that looks like a button, for navigation such as "Sign in" or "Start".
+export function ButtonLink({
+  variant = 'primary',
+  className = '',
+  ...props
+}: LinkProps & { variant?: ButtonVariant }) {
+  return <Link className={buttonClass(variant, className)} {...props} />
+}
+
+// The same for a plain link, e.g. to an anchor on the page.
+export function ButtonAnchor({
+  variant = 'primary',
+  className = '',
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement> & { variant?: ButtonVariant }) {
+  return <a className={buttonClass(variant, className)} {...props} />
 }
 
 export function Spinner({ small = false }: { small?: boolean }) {

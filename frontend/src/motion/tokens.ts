@@ -10,9 +10,10 @@ export const EASE = {
   inOut: 'power2.inOut',
 }
 
-// Conditions for gsap.matchMedia(). Animations are only set up inside `desktop` or
-// `mobile`, so with reduced motion nothing is hidden, pinned or moved.
+// Conditions for gsap.matchMedia(). Animations are only set up inside `motion`, `desktop`
+// or `mobile`, so with reduced motion nothing is hidden, pinned or moved.
 export const MEDIA = {
+  motion: '(prefers-reduced-motion: no-preference)',
   desktop: '(min-width: 768px) and (prefers-reduced-motion: no-preference)',
   mobile: '(max-width: 767px) and (prefers-reduced-motion: no-preference)',
   reduce: '(prefers-reduced-motion: reduce)',

@@ -12,7 +12,8 @@ export function useLenis() {
   useEffect(() => {
     if (prefersReducedMotion()) return
 
-    const lenis = new Lenis()
+    // anchors: links like #agents scroll smoothly instead of being blocked.
+    const lenis = new Lenis({ anchors: true })
     lenis.on('scroll', ScrollTrigger.update)
     const tick = (time: number) => lenis.raf(time * 1000)
     gsap.ticker.add(tick)
