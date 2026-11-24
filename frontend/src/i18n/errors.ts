@@ -11,6 +11,7 @@ const KNOWN_CODES = new Set([
   'email_taken',
   'admin_required',
   'daily_limit_reached',
+  'llm_unavailable',
   'validation_error',
 ])
 

@@ -33,6 +33,7 @@
     "email_taken": "This e-mail is already registered.",
     "admin_required": "Administrator rights are required.",
     "daily_limit_reached": "You've used all messages of the Free plan for today.",
+    "llm_unavailable": "The assistant is temporarily unavailable. Please try again in a minute.",
     "validation_error": "Please check the form fields.",
     "not_found": "Not found.",
     "unknown": "Something went wrong. Please try again."
