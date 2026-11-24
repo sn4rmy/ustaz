@@ -154,6 +154,15 @@ export const mockChat = {
     return delay({ id, course_id, created_at })
   },
 
+  session(sessionId: number): Promise<StudySession> {
+    try {
+      const { id, course_id, created_at } = findSession(sessionId)
+      return delay({ id, course_id, created_at }, 150)
+    } catch (error) {
+      return Promise.reject(error)
+    }
+  },
+
   messages(sessionId: number): Promise<Message[]> {
     try {
       findSession(sessionId)
