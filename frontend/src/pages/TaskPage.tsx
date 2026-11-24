@@ -5,13 +5,12 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router'
 import { itemsApi } from '../api'
 import { ApiError } from '../api/client'
 import type { AttemptResult, Item } from '../api/types'
+import { AttemptResultView } from '../chat/AttemptResultView'
 import { chatStorage } from '../chat/storage'
-import { ResultTable, SchemaView } from '../chat/TaskParts'
+import { SchemaView } from '../chat/TaskParts'
 import { Alert, Button, Card } from '../components/ui'
 import { errorText } from '../i18n/errors'
 import type { ChatLocationState } from './ChatPage'
-
-const FEEDBACK_TONE = { correct: 'success', wrong_result: 'warning', sql_error: 'error' } as const
 
 export function TaskPage() {
   const { sessionId } = useParams()
@@ -102,16 +101,21 @@ function TaskSession({ sessionId }: { sessionId: number }) {
                 {t('task.difficulty', { level: current.difficulty })}
               </span>
             </div>
-            <p className="mt-3 text-base leading-relaxed">{current.prompt}</p>
+            <p className="mt-3 text-lg leading-relaxed">{current.prompt}</p>
           </div>
           <SchemaView schema={current.schema} />
         </Card>
 
         <div className="flex flex-col gap-4">
-          <Card className="flex flex-col gap-3">
-            <label htmlFor="sql-answer" className="text-sm font-medium">
-              {t('task.yourQuery')}
-            </label>
+          <div className="flex flex-col gap-3 overflow-hidden rounded-[20px] border border-border bg-surface shadow-card">
+            <div className="flex items-center gap-1.5 border-b border-border px-4 py-2.5">
+              <span aria-hidden="true" className="size-2.5 rounded-full bg-danger/60" />
+              <span aria-hidden="true" className="size-2.5 rounded-full bg-warning/60" />
+              <span aria-hidden="true" className="size-2.5 rounded-full bg-success/60" />
+              <label htmlFor="sql-answer" className="ml-2 text-sm font-medium">
+                {t('task.yourQuery')}
+              </label>
+            </div>
             <textarea
               id="sql-answer"
               rows={7}
@@ -122,47 +126,26 @@ function TaskSession({ sessionId }: { sessionId: number }) {
               onChange={(e) => setAnswer(e.target.value)}
               onKeyDown={onKeyDown}
               placeholder="SELECT …"
-              className="resize-y rounded-lg border border-border bg-surface-muted p-3 font-mono text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/25"
+              className="mx-4 resize-y rounded-xl border border-border bg-surface-muted p-3 font-mono text-sm leading-relaxed transition-shadow outline-none focus:border-primary focus:ring-4 focus:ring-primary/20"
             />
-            <div className="flex flex-wrap items-center gap-2">
-              <Button onClick={() => void check()} loading={checking} disabled={!answer.trim()}>
-                {t('task.check')}
-              </Button>
-              <span className="text-xs text-muted">{t('task.shortcut')}</span>
+            <div className="flex flex-col gap-3 px-4 pb-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <Button onClick={() => void check()} loading={checking} disabled={!answer.trim()}>
+                  {t('task.check')}
+                </Button>
+                <span className="text-xs text-muted">{t('task.shortcut')}</span>
+              </div>
+              {error && <Alert>{error}</Alert>}
             </div>
-            {error && <Alert>{error}</Alert>}
-          </Card>
+          </div>
 
           {result && (
-            <Card className="flex flex-col gap-3">
-              <Alert tone={FEEDBACK_TONE[result.feedback_code]}>
-                {t(`feedback.${result.feedback_code}`)}
-              </Alert>
-              {result.error && (
-                <pre className="overflow-x-auto rounded-lg bg-danger-soft p-3 font-mono text-sm whitespace-pre-wrap text-danger">
-                  {result.error}
-                </pre>
-              )}
-              {result.columns.length > 0 && (
-                <ResultTable columns={result.columns} rows={result.rows} />
-              )}
-              <div className="flex flex-wrap gap-2">
-                {result.correct ? (
-                  <Button onClick={() => void nextTask()} loading={loadingNext}>
-                    {t('task.next')}
-                  </Button>
-                ) : (
-                  <>
-                    <Button variant="secondary" onClick={askHint}>
-                      {t('task.askHint')}
-                    </Button>
-                    <Button variant="ghost" onClick={() => void nextTask()} loading={loadingNext}>
-                      {t('task.skip')}
-                    </Button>
-                  </>
-                )}
-              </div>
-            </Card>
+            <AttemptResultView
+              result={result}
+              loadingNext={loadingNext}
+              onNext={() => void nextTask()}
+              onHint={askHint}
+            />
           )}
         </div>
       </div>
