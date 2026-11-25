@@ -1,0 +1,101 @@
+@import 'tailwindcss';
+
+/* Styles that apply only while a landing scene animates, e.g. animated:absolute.
+   The scene adds .scene-animated itself, so with reduced motion the plain layout stays. */
+@custom-variant animated (&:where(.scene-animated, .scene-animated *));
+
+/* Design tokens, described in docs/design.md. Components use only these names. */
+:root {
+  --bg: #f5f3ee;
+  --surface: #ffffff;
+  --surface-muted: #eeebe4;
+  --border: #dfdbd1;
+  --text: #15161b;
+  --muted: #5a5d66;
+  --primary: #4338ca;
+  --primary-hover: #3730a3;
+  --primary-fg: #ffffff;
+  --primary-soft: #e9e8fc;
+  --success: #137343;
+  --success-soft: #e3f4e9;
+  --danger: #bf342a;
+  --danger-soft: #fcebe9;
+  --warning: #865600;
+  --warning-soft: #fdf1d6;
+  --card-shadow: 0 1px 2px rgb(21 22 27 / 0.04), 0 4px 16px -4px rgb(21 22 27 / 0.08);
+  --pop-shadow: 0 2px 4px rgb(21 22 27 / 0.06), 0 16px 40px -12px rgb(21 22 27 / 0.18);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0c0d12;
+    --surface: #15171e;
+    --surface-muted: #1f212b;
+    --border: #2b2e3a;
+    --text: #ecedf2;
+    --muted: #9b9eab;
+    --primary: #8f91ff;
+    --primary-hover: #a9abff;
+    --primary-fg: #0c0d1a;
+    --primary-soft: #23244b;
+    --success: #4cc283;
+    --success-soft: #12301f;
+    --danger: #f27a70;
+    --danger-soft: #3a1c1a;
+    --warning: #f0c25a;
+    --warning-soft: #33290f;
+    --card-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 16px -4px rgb(0 0 0 / 0.4);
+    --pop-shadow: 0 2px 4px rgb(0 0 0 / 0.3), 0 16px 40px -12px rgb(0 0 0 / 0.6);
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --font-sans: 'Inter Variable', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Geologica Variable', 'Inter Variable', 'Segoe UI', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Cascadia Code', Consolas, 'Liberation Mono', monospace;
+
+  --shadow-card: var(--card-shadow);
+  --shadow-pop: var(--pop-shadow);
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-fg: var(--primary-fg);
+  --color-primary-soft: var(--primary-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--primary-soft);
+  color: var(--text);
+}
+
+/* Faint grid behind the auth screens; purely decorative. */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, var(--border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+}

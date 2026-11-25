@@ -1,0 +1,260 @@
+{
+  "app": {
+    "name": "Ustaz",
+    "tagline": "An assistant for learning SQL from your course materials"
+  },
+  "nav": {
+    "chat": "Chat",
+    "pricing": "Pricing",
+    "language": "Language",
+    "logout": "Sign out"
+  },
+  "common": {
+    "loading": "Loading…",
+    "retry": "Retry",
+    "back": "Back",
+    "mockMode": "Test data"
+  },
+  "pages": {
+    "login": "Sign in",
+    "register": "Sign up",
+    "chat": "Chat",
+    "task": "SQL task",
+    "pricing": "Pricing",
+    "notFound": "Page not found",
+    "notFoundText": "This page doesn't exist. Go back to the chat.",
+    "toHome": "Go home"
+  },
+  "errors": {
+    "network_error": "Can't reach the server. Check that the backend is running.",
+    "not_authenticated": "Please sign in.",
+    "invalid_token": "Your session has expired, please sign in again.",
+    "invalid_credentials": "Wrong e-mail or password.",
+    "email_taken": "This e-mail is already registered.",
+    "admin_required": "Administrator rights are required.",
+    "daily_limit_reached": "You've used all messages of the Free plan for today.",
+    "llm_unavailable": "The assistant is temporarily unavailable. Please try again in a minute.",
+    "validation_error": "Please check the form fields.",
+    "not_found": "Not found.",
+    "unknown": "Something went wrong. Please try again."
+  },
+  "feedback": {
+    "correct": "Correct! The query returned the right result.",
+    "wrong_result": "The query ran, but the result doesn't match the expected one.",
+    "sql_error": "There's an error in the query."
+  },
+  "plans": {
+    "free": "Free",
+    "premium": "Premium"
+  },
+  "languages": {
+    "kk": "Қазақша",
+    "ru": "Русский",
+    "en": "English"
+  },
+  "auth": {
+    "loginTitle": "Sign in",
+    "registerTitle": "Create an account",
+    "email": "E-mail",
+    "password": "Password",
+    "confirmPassword": "Repeat password",
+    "name": "Name",
+    "language": "Study language",
+    "loginButton": "Sign in",
+    "registerButton": "Sign up",
+    "noAccount": "Don't have an account?",
+    "toRegister": "Sign up",
+    "haveAccount": "Already have an account?",
+    "toLogin": "Sign in",
+    "validation": {
+      "required": "Please fill in this field.",
+      "email": "Enter a valid e-mail.",
+      "passwordShort": "The password must be at least {{min}} characters.",
+      "passwordLong": "The password is too long: at most 72 bytes (36 Cyrillic characters).",
+      "passwordMismatch": "Passwords don't match.",
+      "nameTooLong": "The name must be at most {{max}} characters."
+    }
+  },
+  "chat": {
+    "startTitle": "Study chat",
+    "startText": "Pick a course: the assistant explains its topics from the course materials, gives SQL tasks and checks them.",
+    "continueText": "You have a session in progress.",
+    "continue": "Continue",
+    "newSession": "Start",
+    "noCourses": "There are no courses yet.",
+    "courseLanguage": "Course language: {{language}}",
+    "topic": "Topic",
+    "topics": "Course topics",
+    "anyTopic": "No topic",
+    "pickTopic": "Pick a topic to enable quick actions.",
+    "emptyTitle": "Ask a question about the course",
+    "emptyText": "Or pick a topic and press \"Explain the topic\".",
+    "thinking": "The assistant is answering…",
+    "inputLabel": "Message",
+    "placeholder": "For example: how is WHERE different from HAVING?",
+    "send": "Send",
+    "upgrade": "Upgrade to Premium",
+    "aiGenerated": "AI-generated",
+    "sources": "Sources",
+    "sourceFragment": "Fragment #{{id}}",
+    "explainPrompt": "Explain the topic \"{{topic}}\"",
+    "hintPrompt": "Give me a hint for the task",
+    "notUnderstoodPrompt": "I didn't understand \"{{topic}}\", explain it more simply",
+    "actions": {
+      "explain": "Explain the topic",
+      "hint": "Hint",
+      "notUnderstood": "I don't get it",
+      "task": "Give me a task"
+    },
+    "agents": {
+      "teacher": "Teacher",
+      "examiner": "Examiner",
+      "mentor": "Mentor",
+      "assistant": "Assistant"
+    }
+  },
+  "task": {
+    "difficulty": "Difficulty: {{level}}",
+    "schema": "Tables of the practice database",
+    "yourQuery": "Your SQL query",
+    "check": "Check",
+    "shortcut": "Ctrl + Enter to check",
+    "result": "Query result (rows: {{count}})",
+    "next": "Next task",
+    "skip": "Another task",
+    "askHint": "Ask for a hint in the chat",
+    "backToChat": "Back to chat",
+    "noTask": "No open task. Get one in the chat with \"Give me a task\".",
+    "noItems": "This topic has no tasks yet."
+  },
+  "pricing": {
+    "title": "Pricing",
+    "subtitle": "Free is enough to try it out. Premium removes the daily message limit.",
+    "yourPlan": "Your plan:",
+    "periodEnd": "paid until {{date}}",
+    "usedToday": "Messages today",
+    "usedUnlimited": "Messages today: {{used}}, no limit.",
+    "free": "Free",
+    "unlimited": "Unlimited messages",
+    "limit": "Up to {{count}} messages a day",
+    "currentPlan": "Your current plan",
+    "upgrade": "Upgrade to Premium",
+    "interval": {
+      "month": "month",
+      "year": "year"
+    },
+    "features": {
+      "free": [
+        "Explanations from the course materials",
+        "SQL tasks with automatic checking",
+        "Interface in Kazakh, Russian and English"
+      ],
+      "premium": [
+        "Everything in Free",
+        "Unlimited messages",
+        "Made for exam preparation"
+      ]
+    },
+    "processing": "Payment received, updating your plan…",
+    "success": "Done! Your Premium plan is active.",
+    "pending": "Payment received, but the plan hasn't updated yet. Reload the page in a minute.",
+    "paymentError": "The payment didn't go through. Try again or use another card.",
+    "paddleUnavailable": "Couldn't load the payment page. Check your connection and turn off the ad blocker.",
+    "note": "Payments are processed by Paddle. Card details never reach our server."
+  },
+  "landing": {
+    "nav": {
+      "login": "Sign in",
+      "openChat": "Open chat",
+      "home": "Home"
+    },
+    "hero": {
+      "label": "A learning assistant for SQL",
+      "title": "Learn SQL with three AI agents",
+      "text": "The Teacher explains topics from your course materials, the Examiner gives tasks and checks queries on a real database, and the Mentor tracks your progress and suggests what to do next.",
+      "start": "Get started",
+      "how": "How it works"
+    },
+    "agents": {
+      "label": "Three agents",
+      "title": "One question, three roles",
+      "question": "Student question",
+      "questionText": "How is WHERE different from HAVING?",
+      "orchestrator": "Orchestrator",
+      "roles": {
+        "orchestrator": "picks an agent",
+        "teacher": "explains",
+        "examiner": "checks",
+        "mentor": "guides"
+      },
+      "steps": {
+        "orchestrator": "Every message goes to the orchestrator first. It looks at the question and the session state and decides which agent is needed.",
+        "teacher": "Explains the topic from the course notes and shows which material the answer comes from.",
+        "examiner": "Gives an SQL task and runs the query in a sandbox: the result is compared with a reference, not guessed by the model.",
+        "mentor": "Keeps a model of what the student knows and decides what comes next: review the topic, give a hint or move on."
+      }
+    },
+    "sandbox": {
+      "label": "SQL sandbox",
+      "title": "The database checks your query, not a guess",
+      "text": "Your SQL runs on the course database in an isolated sandbox, and the result is compared with a reference.",
+      "task": "List each student name with every grade they have.",
+      "run": "Running",
+      "rows": "Rows in result: {{count}}",
+      "correct": "Correct"
+    },
+    "topics": {
+      "label": "Five course topics",
+      "title": "From your first SELECT to subqueries",
+      "items": [
+        {
+          "title": "SELECT and WHERE",
+          "text": "Pick the columns you need and keep the rows that match a condition."
+        },
+        {
+          "title": "Sorting and LIMIT",
+          "text": "Order the result and take only the first rows."
+        },
+        {
+          "title": "Aggregates and GROUP BY",
+          "text": "Count, sum and average values for each group."
+        },
+        {
+          "title": "JOIN",
+          "text": "Combine rows of two tables by a shared column."
+        },
+        {
+          "title": "Subqueries",
+          "text": "Use the result of one query inside another."
+        }
+      ]
+    },
+    "progress": {
+      "label": "Progress by topic",
+      "title": "See what you have mastered",
+      "text": "The Mentor estimates how well you know each topic and shows it on a scale.",
+      "soon": "Soon",
+      "example": "Example"
+    },
+    "pricing": {
+      "label": "Pricing",
+      "title": "Start for free",
+      "text": "Free is for trying it out. Premium removes the daily message limit."
+    },
+    "cta": {
+      "title": "Ready to write your first query?",
+      "text": "Signing up takes a minute.",
+      "start": "Get started"
+    },
+    "footer": {
+      "about": "A team project for the course and the practical part of our diploma work.",
+      "team": "Team",
+      "roles": {
+        "lead": "Team Lead, Backend, ML/AI",
+        "frontend": "Frontend",
+        "devops": "DevOps/QA, Payments"
+      },
+      "github": "Code on GitHub"
+    }
+  }
+}

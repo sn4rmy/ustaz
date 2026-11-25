@@ -1,0 +1,306 @@
+import { type FormEvent, type KeyboardEvent, useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Link, useLocation, useNavigate, useParams } from 'react-router'
+
+import { chatApi, coursesApi, itemsApi } from '../api'
+import { ApiError } from '../api/client'
+import type { Message, MessageAction, SendMessageRequest, Topic } from '../api/types'
+import { MessageBubble } from '../chat/MessageBubble'
+import { chatStorage } from '../chat/storage'
+import { TypingDots } from '../chat/TypingDots'
+import { Alert, Button, Loading, SelectField } from '../components/ui'
+import { errorText } from '../i18n/errors'
+import { prefersReducedMotion } from '../motion/tokens'
+
+export interface ChatLocationState {
+  // Set by the task page: ask the Teacher for a hint on this topic right away.
+  hintTopicId?: number
+}
+
+let pendingId = -1
+
+// key resets all state when the user switches to another session.
+export function ChatPage() {
+  const { sessionId } = useParams()
+  return <ChatSession key={sessionId} sessionId={Number(sessionId)} />
+}
+
+function ChatSession({ sessionId }: { sessionId: number }) {
+  const { t } = useTranslation()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const stored = chatStorage.session(sessionId)
+
+  const [topics, setTopics] = useState<Topic[]>([])
+  const [topicId, setTopicId] = useState<number | undefined>(stored?.topicId)
+  const [messages, setMessages] = useState<Message[] | null>(null)
+  const [input, setInput] = useState('')
+  const [sending, setSending] = useState(false)
+  const [loadingTask, setLoadingTask] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [limitReached, setLimitReached] = useState(false)
+  // Messages after this index arrived during the visit and fade in; history does not.
+  const [historyCount, setHistoryCount] = useState(0)
+  const listRef = useRef<HTMLDivElement>(null)
+  const hintHandled = useRef(false)
+
+  useEffect(() => {
+    let cancelled = false
+    async function load() {
+      try {
+        // The course comes from the backend, so a session opened in another browser
+        // shows the topics of its own course.
+        const [session, history] = await Promise.all([
+          chatApi.session(sessionId),
+          chatApi.messages(sessionId),
+        ])
+        const courseTopics = await coursesApi.topics(session.course_id)
+        if (cancelled) return
+        // Remember it as the last session, e.g. when it was opened by a link.
+        if (!stored) chatStorage.saveSession(sessionId, {})
+        setMessages(history)
+        setHistoryCount(history.length)
+        setTopics([...courseTopics].sort((a, b) => a.position - b.position))
+      } catch (err) {
+        if (!cancelled) {
+          setMessages([])
+          setError(errorText(t, err))
+        }
+      }
+    }
+    void load()
+    return () => {
+      cancelled = true
+    }
+    // stored is read once per session; re-running on every render would reload the chat.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionId, t])
+
+  // The message list scrolls inside itself, so only the list is moved to the bottom.
+  useEffect(() => {
+    const list = listRef.current
+    if (!list) return
+    list.scrollTo({ top: list.scrollHeight, behavior: prefersReducedMotion() ? 'auto' : 'smooth' })
+  }, [messages, sending])
+
+  function selectTopic(id: number | undefined) {
+    setTopicId(id)
+    chatStorage.saveSession(sessionId, { ...stored, topicId: id })
+  }
+
+  async function send(content: string, action?: MessageAction, topic = topicId) {
+    const text = content.trim()
+    if (!text || sending) return
+    const data: SendMessageRequest = { content: text }
+    if (topic !== undefined) data.topic_id = topic
+    if (action) data.action = action
+
+    const pending: Message = {
+      id: pendingId--,
+      role: 'user',
+      agent: null,
+      content: text,
+      citations: [],
+      ai_generated: false,
+      created_at: new Date().toISOString(),
+    }
+    setMessages((list) => [...(list ?? []), pending])
+    setSending(true)
+    setError(null)
+    try {
+      const answer = await chatApi.send(sessionId, data)
+      setMessages((list) => [...(list ?? []), answer])
+    } catch (err) {
+      setMessages((list) => (list ?? []).filter((m) => m.id !== pending.id))
+      if (err instanceof ApiError && err.detail === 'daily_limit_reached') setLimitReached(true)
+      else setError(errorText(t, err))
+      if (!action) setInput(text)
+    } finally {
+      setSending(false)
+    }
+  }
+
+  // Coming back from a task with "ask for a hint".
+  useEffect(() => {
+    const hintTopicId = (location.state as ChatLocationState | null)?.hintTopicId
+    if (hintTopicId === undefined || messages === null || hintHandled.current) return
+    hintHandled.current = true
+    navigate(location.pathname, { replace: true, state: null })
+    selectTopic(hintTopicId)
+    void send(t('chat.hintPrompt'), 'hint', hintTopicId)
+    // Runs once when the history has loaded.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messages])
+
+  async function openTask() {
+    if (topicId === undefined) return
+    setLoadingTask(true)
+    setError(null)
+    try {
+      const item = await itemsApi.next(sessionId, topicId)
+      chatStorage.saveTask(sessionId, item)
+      navigate(`/chat/${sessionId}/task`, { state: { item } })
+    } catch (err) {
+      setError(err instanceof ApiError && err.status === 404 ? t('task.noItems') : errorText(t, err))
+      setLoadingTask(false)
+    }
+  }
+
+  function submit(event: FormEvent) {
+    event.preventDefault()
+    const text = input
+    setInput('')
+    void send(text)
+  }
+
+  function onKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
+    if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
+      event.preventDefault()
+      submit(event)
+    }
+  }
+
+  const topicTitle = topics.find((topic) => topic.id === topicId)?.title
+
+  return (
+    <div className="flex h-[calc(100svh-10.5rem)] min-h-[26rem] flex-col gap-4 sm:h-[calc(100svh-8rem)] lg:flex-row">
+      <aside className="lg:w-64 lg:shrink-0 lg:overflow-y-auto">
+        <div className="lg:hidden">
+          <SelectField
+            label={t('chat.topic')}
+            value={topicId ?? ''}
+            onChange={(e) => selectTopic(e.target.value ? Number(e.target.value) : undefined)}
+          >
+            <option value="">{t('chat.anyTopic')}</option>
+            {topics.map((topic) => (
+              <option key={topic.id} value={topic.id}>
+                {topic.position}. {topic.title}
+              </option>
+            ))}
+          </SelectField>
+        </div>
+        <nav className="hidden lg:block" aria-label={t('chat.topics')}>
+          <p className="mb-2 text-xs font-semibold tracking-wide text-muted uppercase">
+            {t('chat.topics')}
+          </p>
+          <ul className="flex flex-col gap-1">
+            {topics.map((topic) => (
+              <li key={topic.id}>
+                <button
+                  type="button"
+                  onClick={() => selectTopic(topic.id === topicId ? undefined : topic.id)}
+                  aria-pressed={topic.id === topicId}
+                  className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition-colors ${
+                    topic.id === topicId
+                      ? 'bg-primary-soft font-medium text-primary'
+                      : 'text-text hover:bg-surface-muted'
+                  }`}
+                >
+                  <span
+                    className={`grid size-6 shrink-0 place-items-center rounded-full font-mono text-xs ${
+                      topic.id === topicId ? 'bg-primary text-primary-fg' : 'bg-surface-muted text-muted'
+                    }`}
+                  >
+                    {topic.position}
+                  </span>
+                  {topic.title}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </aside>
+
+      <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-[20px] border border-border bg-bg shadow-card">
+        <div ref={listRef} className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4 sm:p-5">
+          {messages === null && <Loading label={t('common.loading')} />}
+          {messages?.length === 0 && (
+            <div className="py-16 text-center text-muted">
+              <p className="font-display text-xl font-semibold text-text">{t('chat.emptyTitle')}</p>
+              <p className="mt-2 text-sm">{t('chat.emptyText')}</p>
+            </div>
+          )}
+          {messages?.map((message, index) => (
+            <MessageBubble key={message.id} message={message} appear={index >= historyCount} />
+          ))}
+          {sending && <TypingDots label={t('chat.thinking')} />}
+        </div>
+
+        <div className="space-y-3 border-t border-border bg-surface p-3 sm:p-4">
+          {limitReached && (
+            <Alert tone="warning">
+              {t('errors.daily_limit_reached')}{' '}
+              <Link to="/pricing" className="font-semibold underline">
+                {t('chat.upgrade')}
+              </Link>
+            </Alert>
+          )}
+          {error && <Alert>{error}</Alert>}
+
+          {topicId === undefined && <p className="text-xs text-muted">{t('chat.pickTopic')}</p>}
+          {/* One swipeable row on phones, so the message list keeps its height. */}
+          <div className="-mx-3 flex gap-2 overflow-x-auto px-3 sm:mx-0 sm:flex-wrap sm:px-0">
+            <Button
+              variant="secondary"
+              className="min-h-9 shrink-0 px-3.5 text-xs"
+              disabled={topicId === undefined || sending}
+              onClick={() =>
+                void send(t('chat.explainPrompt', { topic: topicTitle ?? '' }), 'explain')
+              }
+            >
+              {t('chat.actions.explain')}
+            </Button>
+            <Button
+              variant="secondary"
+              className="min-h-9 shrink-0 px-3.5 text-xs"
+              disabled={topicId === undefined || sending}
+              onClick={() => void send(t('chat.hintPrompt'), 'hint')}
+            >
+              {t('chat.actions.hint')}
+            </Button>
+            <Button
+              variant="secondary"
+              className="min-h-9 shrink-0 px-3.5 text-xs"
+              disabled={topicId === undefined || sending}
+              onClick={() =>
+                void send(t('chat.notUnderstoodPrompt', { topic: topicTitle ?? '' }), 'explain')
+              }
+            >
+              {t('chat.actions.notUnderstood')}
+            </Button>
+            <Button
+              variant="secondary"
+              className="min-h-9 shrink-0 px-3.5 text-xs"
+              disabled={topicId === undefined}
+              loading={loadingTask}
+              onClick={() => void openTask()}
+            >
+              {t('chat.actions.task')}
+            </Button>
+          </div>
+
+          <form
+            className="flex items-end gap-2 rounded-2xl border border-border bg-bg p-1.5 transition-shadow focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/20"
+            onSubmit={submit}
+          >
+            <label htmlFor="chat-input" className="sr-only">
+              {t('chat.inputLabel')}
+            </label>
+            <textarea
+              id="chat-input"
+              rows={2}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={onKeyDown}
+              placeholder={t('chat.placeholder')}
+              className="max-h-40 min-h-11 flex-1 resize-none bg-transparent px-2.5 py-2 text-base outline-none"
+            />
+            <Button type="submit" disabled={!input.trim() || sending}>
+              {t('chat.send')}
+            </Button>
+          </form>
+        </div>
+      </section>
+    </div>
+  )
+}
